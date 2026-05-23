@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parlez — Learn French A1 to B2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #002555;
+  --surface: #181611;
+  --card: #1e1c17;
+  --border: #2e2b22;
+  --accent: #d4a853;
+  --accent2: #6b9e7a;
+  --accent3: #c46a5a;
+  --text: #e8e4d9;
+  --muted: #8a8270;
+  --gold: #d4a853;
+  --green: #6b9e7a;
+  --red: #c46a5a;
+  --blue: #5a82c4;
+  --radius: 10px;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* LAYOUT */
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 260px; min-width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; height: 100vh;
+  overflow-y: auto; z-index: 100;
+  transition: transform 0.3s ease;
+}
+.main { margin-left: 260px; flex: 1; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo h1 {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+.sidebar-logo p { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 2px; text-transform: uppercase; }
+
+.lang-switcher {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.lang-switcher select {
+  width: 100%; background: var(--card); border: 1px solid var(--border);
+  color: var(--text); padding: 8px 12px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 13px; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8270' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+
+.nav-section { padding: 12px 0; }
+.nav-label {
+  font-size: 20px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  padding: 6px 20px 4px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px; cursor: pointer;
+  font-size: 18px; color: var(--muted);
+  border-left: 2px solid transparent;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.nav-item:hover { color: var(--text); background: rgba(212,168,83,0.06); }
+.nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(212,168,83,0.08); }
+.nav-item .badge {
+  margin-left: auto; font-size: 10px; padding: 2px 7px;
+  border-radius: 10px; background: var(--card);
+  color: var(--muted); font-weight: 600;
+}
+.nav-item.active .badge { background: rgba(212,168,83,0.2); color: var(--accent); }
+
+/* MAIN AREA */
+.page { display: none; padding: 60px 60px; max-width: 100%; }
+.page.active { display: block; }
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: flex; flex-direction: column;
+  justify-content: center; padding: 60px 72px;
+  background: linear-gradient(135deg, var(--bg) 0%, #161410 100%);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: 'FR'; position: absolute; right: -20px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display); font-size: 380px; font-weight: 900;
+  color: rgba(212,168,83,0.04); line-height: 1; pointer-events: none;
+}
+.hero-tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 20px; }
+.hero h1 {
+  font-family: var(--font-display); font-size: clamp(42px, 6vw, 80px);
+  font-weight: 900; line-height: 1.05; color: var(--text);
+  margin-bottom: 24px;
+}
+.hero h1 em { color: var(--accent); font-style: italic; }
+.hero p { font-size: 17px; color: var(--muted); max-width: 520px; line-height: 1.75; margin-bottom: 40px; }
+.hero-stats { display: flex; gap: 40px; margin-bottom: 48px; }
+.stat { }
+.stat-num { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; }
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--accent); color: #0f0e0b;
+  padding: 14px 32px; border-radius: 50px;
+  font-weight: 600; font-size: 15px; cursor: pointer;
+  border: none; font-family: var(--font-body);
+  transition: all 0.2s; text-decoration: none;
+}
+.hero-cta:hover { background: #e8be6a; transform: translateY(-1px); }
+
+/* HEADINGS */
+.page-title {
+  font-family: var(--font-display); font-size: 36px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+.page-subtitle { color: var(--muted); font-size: 15px; margin-bottom: 40px; }
+.section-title {
+  font-family: var(--font-display); font-size: 22px; font-weight: 700;
+  color: var(--text); margin: 40px 0 16px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+.sub-title { font-size: 16px; font-weight: 600; color: var(--accent); margin: 24px 0 12px; }
+
+/* CARDS */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+}
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.card-sm {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  cursor: pointer; transition: all 0.2s; position: relative;
+}
+.card-sm:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card-sm h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.card-sm p { font-size: 12px; color: var(--muted); }
+.card-sm .level-badge {
+  position: absolute; top: 14px; right: 14px;
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 4px; letter-spacing: 1px;
+}
+.badge-a1 { background: rgba(107,158,122,0.2); color: var(--green); }
+.badge-a2 { background: rgba(107,158,122,0.15); color: #8fbe9e; }
+.badge-b1 { background: rgba(90,130,196,0.2); color: var(--blue); }
+.badge-b2 { background: rgba(196,106,90,0.2); color: var(--red); }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th {
+  background: rgba(212,168,83,0.1); color: var(--accent);
+  padding: 10px 14px; text-align: left; font-weight: 600;
+  font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 10px 14px; border-bottom: 1px solid rgba(46,43,34,0.6);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(212,168,83,0.03); }
+.fr { color: var(--accent); font-weight: 500; }
+.conj-table th:first-child { width: 140px; }
+.conj-table .pronoun { color: var(--muted); font-style: italic; }
+
+/* TABS */
+.tabs { display: flex; gap: 4px; margin-bottom: 28px; flex-wrap: wrap; }
+.tab {
+  padding: 8px 18px; border-radius: 50px; font-size: 13px;
+  font-weight: 500; cursor: pointer; border: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  transition: all 0.15s; font-family: var(--font-body);
+}
+.tab:hover { color: var(--text); border-color: var(--muted); }
+.tab.active { background: var(--accent); color: #0f0e0b; border-color: var(--accent); font-weight: 600; }
+
+/* VERB PANEL */
+.verb-search-wrap { display: flex; gap: 12px; margin-bottom: 28px; }
+.verb-search {
+  flex: 1; background: var(--card); border: 1px solid var(--border);
+  color: var(--text); padding: 12px 16px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 15px;
+  transition: border-color 0.2s;
+}
+.verb-search:focus { outline: none; border-color: var(--accent); }
+.btn {
+  padding: 12px 24px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.2s;
+}
+.btn-primary { background: var(--accent); color: #0f0e0b; }
+.btn-primary:hover { background: #e8be6a; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+/* CONJ GRID */
+.conj-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  margin-bottom: 28px;
+}
+.conj-tense {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; cursor: pointer;
+  transition: all 0.15s;
+}
+.conj-tense:hover { border-color: var(--accent); }
+.conj-tense.active { border-color: var(--accent); background: rgba(212,168,83,0.06); }
+.conj-tense h4 { font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
+.conj-form { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; padding: 2px 0; }
+.conj-form span:last-child { color: var(--text); font-weight: 500; }
+
+/* QUIZ */
+.quiz-container { max-width: 680px; }
+.quiz-progress { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 32px; overflow: hidden; }
+.quiz-progress-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s ease; }
+.quiz-q { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.quiz-context { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+.quiz-options { display: grid; gap: 10px; }
+.quiz-option {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 20px;
+  cursor: pointer; font-size: 15px; text-align: left;
+  font-family: var(--font-body); color: var(--text);
+  transition: all 0.15s; width: 100%;
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--accent); background: rgba(212,168,83,0.05); }
+.quiz-option.correct { border-color: var(--green); background: rgba(107,158,122,0.12); color: var(--green); }
+.quiz-option.wrong { border-color: var(--red); background: rgba(196,106,90,0.12); color: var(--red); }
+.quiz-option:disabled { cursor: default; }
+.quiz-feedback {
+  margin-top: 20px; padding: 16px 20px; border-radius: var(--radius);
+  font-size: 14px; display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb { background: rgba(107,158,122,0.12); border: 1px solid rgba(107,158,122,0.3); color: var(--green); }
+.quiz-feedback.wrong-fb { background: rgba(196,106,90,0.12); border: 1px solid rgba(196,106,90,0.3); color: var(--red); }
+.quiz-next { margin-top: 20px; display: none; }
+.quiz-next.show { display: flex; gap: 12px; }
+.quiz-score-card {
+  text-align: center; padding: 60px 40px;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.score-num { font-family: var(--font-display); font-size: 72px; font-weight: 900; color: var(--accent); }
+.score-label { color: var(--muted); margin-bottom: 32px; }
+.quiz-type-select { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+.quiz-type-btn {
+  padding: 10px 20px; border-radius: var(--radius);
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); cursor: pointer; font-family: var(--font-body);
+  font-size: 13px; transition: all 0.15s;
+}
+.quiz-type-btn:hover { border-color: var(--accent); }
+.quiz-type-btn.selected { background: var(--accent); color: #0f0e0b; border-color: var(--accent); font-weight: 600; }
+
+/* READING */
+.reading-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 24px;
+}
+.reading-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.reading-header h3 { font-family: var(--font-display); font-size: 18px; }
+.reading-body { padding: 24px; }
+.reading-text { font-size: 16px; line-height: 2; margin-bottom: 24px; }
+.reading-text .highlight { cursor: pointer; border-bottom: 1px dotted var(--accent); color: var(--accent); position: relative; }
+.tooltip {
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #0f0e0b; padding: 6px 12px;
+  border-radius: 6px; font-size: 12px; white-space: nowrap;
+  pointer-events: none; opacity: 0; transition: opacity 0.2s;
+  z-index: 999;
+}
+.highlight:hover .tooltip { opacity: 1; }
+.reading-qs { border-top: 1px solid var(--border); padding-top: 20px; }
+.reading-q { margin-bottom: 16px; }
+.reading-q p { font-weight: 600; margin-bottom: 8px; color: var(--text); }
+.reading-q input {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 14px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 14px;
+}
+.reading-q input:focus { outline: none; border-color: var(--accent); }
+
+/* HIGHLIGHT BOX */
+.info-box {
+  padding: 16px 20px; border-radius: var(--radius); margin: 16px 0;
+  border-left: 3px solid;
+}
+.info-box.tip { background: rgba(107,158,122,0.08); border-color: var(--green); color: var(--text); }
+.info-box.warn { background: rgba(212,168,83,0.08); border-color: var(--gold); color: var(--text); }
+.info-box.note { background: rgba(90,130,196,0.08); border-color: var(--blue); color: var(--text); }
+.info-box strong { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.info-box.tip strong { color: var(--green); }
+.info-box.warn strong { color: var(--gold); }
+.info-box.note strong { color: var(--blue); }
+
+/* EXAMPLE */
+.example {
+  background: rgba(212,168,83,0.06); border-left: 3px solid var(--accent);
+  padding: 12px 16px; border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 12px 0; font-size: 14.5px;
+}
+.example .fr-ex { color: var(--accent); font-weight: 500; font-size: 15px; }
+.example .tr-ex { color: var(--muted); font-size: 13px; margin-top: 3px; }
+
+/* GRAMMAR RULE */
+.rule-box {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 24px; margin: 16px 0;
+}
+.rule-box h4 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+.rule-box ul { padding-left: 18px; }
+.rule-box li { margin-bottom: 6px; font-size: 14px; color: var(--muted); }
+.rule-box li span { color: var(--text); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .page { padding: 24px 20px; }
+  .hero { padding: 40px 24px; }
+  .conj-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero::before { display: none; }
+}
+.menu-btn {
+  display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
+  background: var(--accent); color: #0f0e0b; border: none;
+  width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
+  font-size: 18px; align-items: center; justify-content: center;
+}
+@media (max-width: 900px) { .menu-btn { display: flex; } }
+.overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+.overlay.show { display: block; }
+
+/* PROGRESS BAR STATIC */
+.progress-track { background: var(--border); border-radius: 4px; height: 6px; margin-top: 8px; }
+.progress-fill { height: 100%; border-radius: 4px; background: var(--accent); }
+
+/* VOCAB LIST */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.vocab-item {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 16px; cursor: pointer; transition: all 0.15s;
+}
+.vocab-item:hover { border-color: var(--accent); }
+.vocab-item .word { font-size: 16px; font-weight: 600; color: var(--accent); }
+.vocab-item .translation { font-size: 13px; color: var(--muted); margin-top: 3px; display: none; }
+.vocab-item.revealed .translation { display: block; color: var(--text); }
+.vocab-item .hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+/* AUDIO BTN */
+.speak-btn {
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 16px; padding: 4px 8px; border-radius: 4px;
+  transition: color 0.15s;
+}
+.speak-btn:hover { color: var(--accent); }
+
+/* FILL BLANK */
+.fill-blank input {
+  background: var(--surface); border: none; border-bottom: 2px solid var(--accent);
+  color: var(--accent); font-size: 15px; font-weight: 600;
+  width: 120px; padding: 2px 8px; text-align: center;
+  font-family: var(--font-body);
+}
+.fill-blank input:focus { outline: none; }
+.fill-blank input.correct-ans { border-color: var(--green); color: var(--green); }
+.fill-blank input.wrong-ans { border-color: var(--red); color: var(--red); }
+</style>
+</head>
+<body>
+
+  
+<button class="menu-btn" id="menuBtn">☰</button>
+<div class="overlay" id="overlay"></div>
+
+<div class="app">
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h1>Parlez</h1>
+    <p>French A1 → B2</p>
+  </div>
+ 
+  
+  <div class="nav-section">
+    <div class="nav-label" data-i18n="nav_home">Home</div>
+    <div class="nav-item active" onclick="showPage('home')">🏠 <span data-i18n="nav_overview">Overview</span></div>
+  </div>
+  
+  <div class="nav-section">
+    <div class="nav-label">A1 — Débutant</div>
+    <div class="nav-item" onclick="showPage('a1-basics')">📖 <span data-i18n="nav_basics">Basics & Alphabet</span><span class="badge">A1</span></div>
+    <div class="nav-item" onclick="showPage('a1-grammar')">✏️ <span data-i18n="nav_grammar">Grammar Foundations</span><span class="badge">A1</span></div>
+    <div class="nav-item" onclick="showPage('a1-vocab')">🔤 <span data-i18n="nav_vocab">Essential Vocabulary</span><span class="badge">A1</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">A2 — Élémentaire</div>
+    <div class="nav-item" onclick="showPage('a2-grammar')">✏️ <span data-i18n="nav_grammar">Grammar</span><span class="badge">A2</span></div>
+    <div class="nav-item" onclick="showPage('a2-vocab')">🔤 <span data-i18n="nav_vocab">Vocabulary</span><span class="badge">A2</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">B1 — Intermédiaire</div>
+    <div class="nav-item" onclick="showPage('b1-grammar')">✏️ <span data-i18n="nav_grammar">Grammar</span><span class="badge">B1</span></div>
+    <div class="nav-item" onclick="showPage('b1-vocab')">🔤 <span data-i18n="nav_vocab">Vocabulary</span><span class="badge">B1</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">B2 — Intermédiaire Sup.</div>
+    <div class="nav-item" onclick="showPage('b2-grammar')">✏️ <span data-i18n="nav_grammar">Advanced Grammar</span><span class="badge">B2</span></div>
+    <div class="nav-item" onclick="showPage('b2-vocab')">🔤 <span data-i18n="nav_vocab">Vocabulary</span><span class="badge">B2</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label" data-i18n="nav_verbs_label">Verb Conjugation</div>
+    <div class="nav-item" onclick="showPage('verbs')">🔄 <span data-i18n="nav_verbs">All Tenses & Verbs</span></div>
+    <div class="nav-item" onclick="showPage('tenses')">⏱️ <span data-i18n="nav_tenses">Tense Guide</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label" data-i18n="nav_reading_label">Reading</div>
+    <div class="nav-item" onclick="showPage('reading-a1')">📄 A1 <span data-i18n="nav_reading">Reading</span></div>
+    <div class="nav-item" onclick="showPage('reading-b1')">📄 B1 <span data-i18n="nav_reading">Reading</span></div>
+    <div class="nav-item" onclick="showPage('reading-b2')">📄 B2 <span data-i18n="nav_reading">Reading</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label" data-i18n="nav_practice_label">Practice</div>
+    <div class="nav-item" onclick="showPage('quiz')">🧠 <span data-i18n="nav_quiz">Quiz</span></div>
+    <div class="nav-item" onclick="showPage('fill')">✍️ <span data-i18n="nav_fill">Fill in Blanks</span></div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active" style="padding:0">
+  <div class="hero">
+    <div class="hero-tag" data-i18n="hero_tag">Complete French Course — A1 to B2</div>
+    <h1>Speak <em>French</em><br>from zero with <br> Jahn.</h1>
+    <p data-i18n="hero_desc">The only resource you need. Full grammar, every tense, 2000+ verbs conjugated, reading exercises, and quizzes — in your language.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label" data-i18n="stat_levels">Levels A1–B2</div></div>
+      <div class="stat"><div class="stat-num">200+</div><div class="stat-label" data-i18n="stat_verbs">Verbs Conjugated</div></div>
+      <div class="stat"><div class="stat-num">12</div><div class="stat-label" data-i18n="stat_tenses">Tenses Covered</div></div>
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label" data-i18n="stat_quiz">Quiz Questions</div></div>
+    </div>
+    <button class="hero-cta" onclick="showPage('a1-basics')">
+      <span data-i18n="cta_start">Start A1 →</span>
+    </button>
+  </div>
+  
+  <div class="page" style="display:block; padding:40px 48px 60px;">
+    <div class="section-title" data-i18n="course_map">Course Map</div>
+    <div class="card-grid">
+      <div class="card-sm" onclick="showPage('a1-basics')"><span class="level-badge badge-a1">A1</span><h3 data-i18n="t_a1basics">Basics & Alphabet</h3><p data-i18n="d_a1basics">Pronunciation, alphabet, greetings, numbers, colors</p></div>
+      <div class="card-sm" onclick="showPage('a1-grammar')"><span class="level-badge badge-a1">A1</span><h3 data-i18n="t_a1gram">Grammar Foundations</h3><p data-i18n="d_a1gram">Articles, gender, nouns, basic sentences, adjectives</p></div>
+      <div class="card-sm" onclick="showPage('a1-vocab')"><span class="level-badge badge-a1">A1</span><h3 data-i18n="t_a1vocab">A1 Vocabulary</h3><p data-i18n="d_a1vocab">Family, food, body, days, months, 300+ words</p></div>
+      <div class="card-sm" onclick="showPage('a2-grammar')"><span class="level-badge badge-a2">A2</span><h3 data-i18n="t_a2gram">A2 Grammar</h3><p data-i18n="d_a2gram">Passé composé, imparfait, negation, questions</p></div>
+      <div class="card-sm" onclick="showPage('a2-vocab')"><span class="level-badge badge-a2">A2</span><h3 data-i18n="t_a2vocab">A2 Vocabulary</h3><p data-i18n="d_a2vocab">Work, travel, shopping, weather, emotions</p></div>
+      <div class="card-sm" onclick="showPage('b1-grammar')"><span class="level-badge badge-b1">B1</span><h3 data-i18n="t_b1gram">B1 Grammar</h3><p data-i18n="d_b1gram">Subjunctive, conditional, relative pronouns</p></div>
+      <div class="card-sm" onclick="showPage('b1-vocab')"><span class="level-badge badge-b1">B1</span><h3 data-i18n="t_b1vocab">B1 Vocabulary</h3><p data-i18n="d_b1vocab">Society, culture, health, media, 500+ words</p></div>
+      <div class="card-sm" onclick="showPage('b2-grammar')"><span class="level-badge badge-b2">B2</span><h3 data-i18n="t_b2gram">B2 Grammar</h3><p data-i18n="d_b2gram">Subjunctive mood, advanced tenses, nuance</p></div>
+      <div class="card-sm" onclick="showPage('verbs')"><span class="level-badge badge-b1">ALL</span><h3 data-i18n="t_verbs">Verb Conjugator</h3><p data-i18n="d_verbs">200+ verbs, 8 tenses, every pronoun</p></div>
+      <div class="card-sm" onclick="showPage('tenses')"><span class="level-badge badge-b1">ALL</span><h3 data-i18n="t_tenses">Tense Guide</h3><p data-i18n="d_tenses">When and how to use every French tense</p></div>
+      <div class="card-sm" onclick="showPage('quiz')"><span class="level-badge badge-b2">QUIZ</span><h3 data-i18n="t_quiz">Quiz</h3><p data-i18n="d_quiz">Grammar, vocab, conjugation — test yourself</p></div>
+      <div class="card-sm" onclick="showPage('reading-a1')"><span class="level-badge badge-a1">READ</span><h3 data-i18n="t_reading">Reading Practice</h3><p data-i18n="d_reading">Graded texts A1–B2 with comprehension questions</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- A1 BASICS -->
+<div id="page-a1-basics" class="page">
+  <div class="page-title">A1 — Basics & Pronunciation</div>
+  <div class="page-subtitle" data-i18n="sub_a1basics">The French alphabet, sounds, greetings, and numbers</div>
+  
+  <div class="section-title" data-i18n="sec_alphabet">The French Alphabet</div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <tr><th>Letter</th><th>Name (French)</th><th>Pronunciation hint</th></tr>
+        <tr><td class="fr">A</td><td>ah</td><td>like 'a' in father</td></tr>
+        <tr><td class="fr">B</td><td>bé</td><td>like English 'bay'</td></tr>
+        <tr><td class="fr">C</td><td>cé</td><td>hard 'k' before a,o,u; soft 's' before e,i,y</td></tr>
+        <tr><td class="fr">D</td><td>dé</td><td>like English 'day'</td></tr>
+        <tr><td class="fr">E</td><td>euh</td><td>silent at end of word; 'uh' in middle</td></tr>
+        <tr><td class="fr">F</td><td>effe</td><td>like English 'f'</td></tr>
+        <tr><td class="fr">G</td><td>gé</td><td>hard before a,o,u; soft 'zh' before e,i</td></tr>
+        <tr><td class="fr">H</td><td>ache</td><td>always silent</td></tr>
+        <tr><td class="fr">I</td><td>ee</td><td>like 'ee' in feet</td></tr>
+        <tr><td class="fr">J</td><td>ji</td><td>like 's' in measure / 'zh'</td></tr>
+        <tr><td class="fr">K</td><td>ka</td><td>like English 'k'</td></tr>
+        <tr><td class="fr">L</td><td>elle</td><td>like English 'l'</td></tr>
+        <tr><td class="fr">M</td><td>emme</td><td>like English 'm'</td></tr>
+        <tr><td class="fr">N</td><td>enne</td><td>like English 'n'</td></tr>
+        <tr><td class="fr">O</td><td>oh</td><td>like 'o' in go</td></tr>
+        <tr><td class="fr">P</td><td>pé</td><td>like English 'p' (no puff of air)</td></tr>
+        <tr><td class="fr">Q</td><td>ku</td><td>almost always followed by 'u', sounds 'k'</td></tr>
+        <tr><td class="fr">R</td><td>erre</td><td>guttural, from back of throat</td></tr>
+        <tr><td class="fr">S</td><td>esse</td><td>'s' alone; 'z' between vowels</td></tr>
+        <tr><td class="fr">T</td><td>té</td><td>like English 't'</td></tr>
+        <tr><td class="fr">U</td><td>u</td><td>round lips saying 'ee' — no English equivalent</td></tr>
+        <tr><td class="fr">V</td><td>vé</td><td>like English 'v'</td></tr>
+        <tr><td class="fr">W</td><td>double vé</td><td>usually 'v' in French words</td></tr>
+        <tr><td class="fr">X</td><td>ixe</td><td>'ks' or 'gz'</td></tr>
+        <tr><td class="fr">Y</td><td>i grec</td><td>like 'ee' or English 'y'</td></tr>
+        <tr><td class="fr">Z</td><td>zède</td><td>like English 'z'</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">Accents & Special Characters</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Accent</th><th>Name</th><th>Example</th><th>Effect</th></tr>
+      <tr><td class="fr">é</td><td>accent aigu</td><td class="fr">été</td><td>sounds like 'ay'</td></tr>
+      <tr><td class="fr">è, ê</td><td>accent grave / circonflexe</td><td class="fr">père, fête</td><td>open 'eh' sound</td></tr>
+      <tr><td class="fr">â, ô, û, î</td><td>accent circonflexe</td><td class="fr">château</td><td>lengthens vowel slightly</td></tr>
+      <tr><td class="fr">ë, ï, ü</td><td>tréma</td><td class="fr">Noël</td><td>pronounce separately from previous vowel</td></tr>
+      <tr><td class="fr">à</td><td>accent grave (a)</td><td class="fr">à, là</td><td>distinguishes meaning only</td></tr>
+      <tr><td class="fr">ç</td><td>cédille</td><td class="fr">garçon</td><td>c sounds like 's'</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">Greetings & Politeness</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>French</th><th>Meaning</th><th>When to use</th></tr>
+      <tr><td class="fr">Bonjour</td><td>Hello / Good morning</td><td>Any time, formal & informal</td></tr>
+      <tr><td class="fr">Bonsoir</td><td>Good evening</td><td>After ~5pm</td></tr>
+      <tr><td class="fr">Bonne nuit</td><td>Good night</td><td>Before sleeping</td></tr>
+      <tr><td class="fr">Salut</td><td>Hi / Bye (informal)</td><td>Friends, casual</td></tr>
+      <tr><td class="fr">Au revoir</td><td>Goodbye</td><td>Formal & informal</td></tr>
+      <tr><td class="fr">À bientôt</td><td>See you soon</td><td>Parting</td></tr>
+      <tr><td class="fr">Merci (beaucoup)</td><td>Thank you (very much)</td><td>Always</td></tr>
+      <tr><td class="fr">De rien / Je vous en prie</td><td>You're welcome</td><td>Informal / Formal</td></tr>
+      <tr><td class="fr">S'il vous plaît / S'il te plaît</td><td>Please</td><td>Formal / Informal</td></tr>
+      <tr><td class="fr">Excusez-moi / Excuse-moi</td><td>Excuse me</td><td>Formal / Informal</td></tr>
+      <tr><td class="fr">Pardon</td><td>Sorry / Pardon</td><td>Apologizing or not hearing</td></tr>
+      <tr><td class="fr">Comment allez-vous ? / Ça va ?</td><td>How are you?</td><td>Formal / Informal</td></tr>
+      <tr><td class="fr">Ça va (bien) / Très bien, merci</td><td>I'm fine / Very well</td><td>Response</td></tr>
+      <tr><td class="fr">Comment vous appelez-vous ? / Tu t'appelles comment ?</td><td>What's your name?</td><td>Formal / Informal</td></tr>
+      <tr><td class="fr">Je m'appelle...</td><td>My name is...</td><td>Introducing yourself</td></tr>
+      <tr><td class="fr">Enchanté(e)</td><td>Nice to meet you</td><td>First meeting</td></tr>
+      <tr><td class="fr">D'où venez-vous ? / Tu viens d'où ?</td><td>Where are you from?</td><td>Formal / Informal</td></tr>
+      <tr><td class="fr">Je viens de...</td><td>I come from...</td><td>Origin</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">Numbers 0–100</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>French</th><th>#</th><th>French</th><th>#</th><th>French</th></tr>
+      <tr><td>0</td><td class="fr">zéro</td><td>10</td><td class="fr">dix</td><td>20</td><td class="fr">vingt</td></tr>
+      <tr><td>1</td><td class="fr">un / une</td><td>11</td><td class="fr">onze</td><td>21</td><td class="fr">vingt et un</td></tr>
+      <tr><td>2</td><td class="fr">deux</td><td>12</td><td class="fr">douze</td><td>22</td><td class="fr">vingt-deux</td></tr>
+      <tr><td>3</td><td class="fr">trois</td><td>13</td><td class="fr">treize</td><td>30</td><td class="fr">trente</td></tr>
+      <tr><td>4</td><td class="fr">quatre</td><td>14</td><td class="fr">quatorze</td><td>40</td><td class="fr">quarante</td></tr>
+      <tr><td>5</td><td class="fr">cinq</td><td>15</td><td class="fr">quinze</td><td>50</td><td class="fr">cinquante</td></tr>
+      <tr><td>6</td><td class="fr">six</td><td>16</td><td class="fr">seize</td><td>60</td><td class="fr">soixante</td></tr>
+      <tr><td>7</td><td class="fr">sept</td><td>17</td><td class="fr">dix-sept</td><td>70</td><td class="fr">soixante-dix</td></tr>
+      <tr><td>8</td><td class="fr">huit</td><td>18</td><td class="fr">dix-huit</td><td>80</td><td class="fr">quatre-vingts</td></tr>
+      <tr><td>9</td><td class="fr">neuf</td><td>19</td><td class="fr">dix-neuf</td><td>100</td><td class="fr">cent</td></tr>
+    </table>
+  </div>
+  <div class="info-box warn"><strong>⚠️ Note</strong>70 = soixante-dix (60+10), 80 = quatre-vingts (4×20), 90 = quatre-vingt-dix (4×20+10) — French has a quirky counting system!</div>
+
+  <div class="section-title">Days, Months & Time</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Days</th><th>French</th><th>Months</th><th>French</th></tr>
+      <tr><td>Monday</td><td class="fr">lundi</td><td>January</td><td class="fr">janvier</td></tr>
+      <tr><td>Tuesday</td><td class="fr">mardi</td><td>February</td><td class="fr">février</td></tr>
+      <tr><td>Wednesday</td><td class="fr">mercredi</td><td>March</td><td class="fr">mars</td></tr>
+      <tr><td>Thursday</td><td class="fr">jeudi</td><td>April</td><td class="fr">avril</td></tr>
+      <tr><td>Friday</td><td class="fr">vendredi</td><td>May</td><td class="fr">mai</td></tr>
+      <tr><td>Saturday</td><td class="fr">samedi</td><td>June</td><td class="fr">juin</td></tr>
+      <tr><td>Sunday</td><td class="fr">dimanche</td><td>July</td><td class="fr">juillet</td></tr>
+      <tr><td></td><td></td><td>August</td><td class="fr">août</td></tr>
+      <tr><td></td><td></td><td>September</td><td class="fr">septembre</td></tr>
+      <tr><td></td><td></td><td>October</td><td class="fr">octobre</td></tr>
+      <tr><td></td><td></td><td>November</td><td class="fr">novembre</td></tr>
+      <tr><td></td><td></td><td>December</td><td class="fr">décembre</td></tr>
+    </table>
+  </div>
+  <div class="info-box tip"><strong>✅ TIP</strong>In French, days and months are NOT capitalized (lundi, janvier), unlike in English.</div>
+
+  <div class="section-title">Colors</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Color</th><th>French (masc.)</th><th>French (fem.)</th></tr>
+      <tr><td>Red</td><td class="fr">rouge</td><td class="fr">rouge</td></tr>
+      <tr><td>Blue</td><td class="fr">bleu</td><td class="fr">bleue</td></tr>
+      <tr><td>Green</td><td class="fr">vert</td><td class="fr">verte</td></tr>
+      <tr><td>Yellow</td><td class="fr">jaune</td><td class="fr">jaune</td></tr>
+      <tr><td>Black</td><td class="fr">noir</td><td class="fr">noire</td></tr>
+      <tr><td>White</td><td class="fr">blanc</td><td class="fr">blanche</td></tr>
+      <tr><td>Orange</td><td class="fr">orange</td><td class="fr">orange</td></tr>
+      <tr><td>Purple</td><td class="fr">violet</td><td class="fr">violette</td></tr>
+      <tr><td>Pink</td><td class="fr">rose</td><td class="fr">rose</td></tr>
+      <tr><td>Grey</td><td class="fr">gris</td><td class="fr">grise</td></tr>
+      <tr><td>Brown</td><td class="fr">marron</td><td class="fr">marron</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- A1 GRAMMAR -->
+<div id="page-a1-grammar" class="page">
+  <div class="page-title">A1 — Grammar Foundations</div>
+  <div class="page-subtitle">Gender, articles, basic sentence structure, être & avoir</div>
+
+  <div class="section-title">1. Grammatical Gender</div>
+  <p>Every French noun is either <strong>masculine (m.)</strong> or <strong>feminine (f.)</strong>. There are no neutral nouns.</p>
+  <div class="rule-box">
+    <h4>Common feminine endings:</h4>
+    <ul>
+      <li><span>-tion, -sion:</span> la nation, la décision</li>
+      <li><span>-ette:</span> la baguette, la tablette</li>
+      <li><span>-ence, -ance:</span> la patience, la science</li>
+      <li><span>-ité:</span> la liberté, la qualité</li>
+      <li><span>-ure:</span> la nature, la culture</li>
+    </ul>
+    <h4 style="margin-top:14px">Common masculine endings:</h4>
+    <ul>
+      <li><span>-age:</span> le garage, le voyage</li>
+      <li><span>-ment:</span> le gouvernement, le moment</li>
+      <li><span>-eau:</span> le chapeau, le bateau</li>
+      <li><span>-isme:</span> le tourisme, le romantisme</li>
+    </ul>
+  </div>
+
+  <div class="section-title">2. Articles</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Masculine</th><th>Feminine</th><th>Plural</th><th>Before vowel</th></tr>
+      <tr><td><strong>Definite</strong> (the)</td><td class="fr">le</td><td class="fr">la</td><td class="fr">les</td><td class="fr">l'</td></tr>
+      <tr><td><strong>Indefinite</strong> (a/an)</td><td class="fr">un</td><td class="fr">une</td><td class="fr">des</td><td>—</td></tr>
+      <tr><td><strong>Partitive</strong> (some)</td><td class="fr">du (de le)</td><td class="fr">de la</td><td class="fr">des</td><td class="fr">de l'</td></tr>
+    </table>
+  </div>
+  <div class="example"><div class="fr-ex">le livre / la table / les enfants / l'homme</div><div class="tr-ex">the book / the table / the children / the man</div></div>
+  <div class="info-box note"><strong>📝 NOTE</strong>After negation, use "de/d'" instead of indefinite/partitive articles: <em>Je n'ai pas de voiture.</em> (I don't have a car.)</div>
+
+  <div class="section-title">3. Subject Pronouns</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Person</th><th>French</th><th>English</th><th>Notes</th></tr>
+      <tr><td>1st sing.</td><td class="fr">je (j')</td><td>I</td><td>j' before vowel/h</td></tr>
+      <tr><td>2nd sing. informal</td><td class="fr">tu</td><td>you</td><td>friends, family, children</td></tr>
+      <tr><td>3rd sing. masc.</td><td class="fr">il</td><td>he / it</td><td></td></tr>
+      <tr><td>3rd sing. fem.</td><td class="fr">elle</td><td>she / it</td><td></td></tr>
+      <tr><td>Impersonal</td><td class="fr">on</td><td>one / we (informal)</td><td>very common in speech</td></tr>
+      <tr><td>1st pl.</td><td class="fr">nous</td><td>we</td><td>formal writing</td></tr>
+      <tr><td>2nd pl. / formal sing.</td><td class="fr">vous</td><td>you (pl.) / you (formal)</td><td>always formal option</td></tr>
+      <tr><td>3rd pl. masc.</td><td class="fr">ils</td><td>they (m.)</td><td>also for mixed groups</td></tr>
+      <tr><td>3rd pl. fem.</td><td class="fr">elles</td><td>they (f.)</td><td>only all-female groups</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">4. Être — To Be (Présent)</div>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Être</th><th>Example</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">suis</td><td class="fr">Je suis étudiant. — I am a student.</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">es</td><td class="fr">Tu es français ? — Are you French?</td></tr>
+      <tr><td class="pronoun">il/elle/on</td><td class="fr">est</td><td class="fr">Elle est médecin. — She is a doctor.</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">sommes</td><td class="fr">Nous sommes en France. — We are in France.</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">êtes</td><td class="fr">Vous êtes prêt ? — Are you ready?</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">sont</td><td class="fr">Ils sont contents. — They are happy.</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">5. Avoir — To Have (Présent)</div>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Avoir</th><th>Example</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">ai</td><td class="fr">J'ai faim. — I am hungry.</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">as</td><td class="fr">Tu as un chien ? — Do you have a dog?</td></tr>
+      <tr><td class="pronoun">il/elle/on</td><td class="fr">a</td><td class="fr">Il a vingt ans. — He is twenty years old.</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">avons</td><td class="fr">Nous avons une maison. — We have a house.</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">avez</td><td class="fr">Vous avez le temps ? — Do you have time?</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">ont</td><td class="fr">Elles ont raison. — They are right.</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">6. Regular -ER Verbs (Présent)</div>
+  <p style="margin-bottom:12px">Most French verbs end in <strong>-er</strong>. Remove -er and add these endings:</p>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Ending</th><th>Parler (to speak)</th><th>Aimer (to like)</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">-e</td><td class="fr">parle</td><td class="fr">aime</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">-es</td><td class="fr">parles</td><td class="fr">aimes</td></tr>
+      <tr><td class="pronoun">il/elle/on</td><td class="fr">-e</td><td class="fr">parle</td><td class="fr">aime</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">-ons</td><td class="fr">parlons</td><td class="fr">aimons</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">-ez</td><td class="fr">parlez</td><td class="fr">aimez</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">-ent</td><td class="fr">parlent</td><td class="fr">aiment</td></tr>
+    </table>
+  </div>
+  <div class="info-box tip"><strong>✅ TIP</strong>The endings -e, -es, -ent are all silent. Only -ons and -ez are pronounced.</div>
+
+  <div class="section-title">7. Regular -IR Verbs (Présent)</div>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Ending</th><th>Finir (to finish)</th><th>Choisir (to choose)</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">-is</td><td class="fr">finis</td><td class="fr">choisis</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">-is</td><td class="fr">finis</td><td class="fr">choisis</td></tr>
+      <tr><td class="pronoun">il/elle/on</td><td class="fr">-it</td><td class="fr">finit</td><td class="fr">choisit</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">-issons</td><td class="fr">finissons</td><td class="fr">choisissons</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">-issez</td><td class="fr">finissez</td><td class="fr">choisissez</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">-issent</td><td class="fr">finissent</td><td class="fr">choisissent</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">8. Regular -RE Verbs (Présent)</div>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Ending</th><th>Vendre (to sell)</th><th>Attendre (to wait)</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">-s</td><td class="fr">vends</td><td class="fr">attends</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">-s</td><td class="fr">vends</td><td class="fr">attends</td></tr>
+      <tr><td class="pronoun">il/elle/on</td><td class="fr">(nothing)</td><td class="fr">vend</td><td class="fr">attend</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">-ons</td><td class="fr">vendons</td><td class="fr">attendons</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">-ez</td><td class="fr">vendez</td><td class="fr">attendez</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">-ent</td><td class="fr">vendent</td><td class="fr">attendent</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">9. Adjective Agreement</div>
+  <div class="rule-box">
+    <h4>Adjectives agree with the noun in gender and number:</h4>
+    <ul>
+      <li>Masculine singular: <span>un ami intelligent</span></li>
+      <li>Feminine singular: <span>une amie intelligente</span> (+e)</li>
+      <li>Masculine plural: <span>des amis intelligents</span> (+s)</li>
+      <li>Feminine plural: <span>des amies intelligentes</span> (+es)</li>
+    </ul>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Masc. Sing.</th><th>Fem. Sing.</th><th>Masc. Pl.</th><th>Fem. Pl.</th><th>English</th></tr>
+      <tr><td class="fr">grand</td><td class="fr">grande</td><td class="fr">grands</td><td class="fr">grandes</td><td>tall/big</td></tr>
+      <tr><td class="fr">petit</td><td class="fr">petite</td><td class="fr">petits</td><td class="fr">petites</td><td>small/little</td></tr>
+      <tr><td class="fr">beau/bel</td><td class="fr">belle</td><td class="fr">beaux</td><td class="fr">belles</td><td>beautiful</td></tr>
+      <tr><td class="fr">nouveau/nouvel</td><td class="fr">nouvelle</td><td class="fr">nouveaux</td><td class="fr">nouvelles</td><td>new</td></tr>
+      <tr><td class="fr">vieux/vieil</td><td class="fr">vieille</td><td class="fr">vieux</td><td class="fr">vieilles</td><td>old</td></tr>
+      <tr><td class="fr">heureux</td><td class="fr">heureuse</td><td class="fr">heureux</td><td class="fr">heureuses</td><td>happy</td></tr>
+      <tr><td class="fr">bon</td><td class="fr">bonne</td><td class="fr">bons</td><td class="fr">bonnes</td><td>good</td></tr>
+    </table>
+  </div>
+  <div class="info-box warn"><strong>📍 PLACEMENT</strong>Most adjectives come AFTER the noun: <em>un livre intéressant</em>. But BAGS adjectives (Beauty, Age, Goodness, Size) come BEFORE: <em>un beau livre, une petite fille, une bonne idée, un grand homme.</em></div>
+
+  <div class="section-title">10. Negation</div>
+  <div class="rule-box">
+    <h4>Basic negation: ne ... pas</h4>
+    <ul>
+      <li>Place <span>ne</span> before verb, <span>pas</span> after: <em>Je ne parle pas anglais.</em></li>
+      <li>Before vowel: <span>n'</span> — <em>Je n'aime pas ça.</em></li>
+      <li>In spoken French, <span>ne</span> is often dropped: <em>Je parle pas.</em> (informal)</li>
+    </ul>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Pattern</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td class="fr">ne ... pas</td><td>not</td><td class="fr">Je ne mange pas.</td></tr>
+      <tr><td class="fr">ne ... jamais</td><td>never</td><td class="fr">Il ne mange jamais.</td></tr>
+      <tr><td class="fr">ne ... rien</td><td>nothing</td><td class="fr">Je ne vois rien.</td></tr>
+      <tr><td class="fr">ne ... personne</td><td>nobody</td><td class="fr">Je ne vois personne.</td></tr>
+      <tr><td class="fr">ne ... plus</td><td>no longer</td><td class="fr">Elle ne travaille plus.</td></tr>
+      <tr><td class="fr">ne ... que</td><td>only</td><td class="fr">Je n'ai que dix euros.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- A1 VOCAB -->
+<div id="page-a1-vocab" class="page">
+  <div class="page-title">A1 — Essential Vocabulary</div>
+  <div class="page-subtitle">Click any word to reveal the translation</div>
+  
+  <div class="section-title">Family (La Famille)</div>
+  <div class="vocab-grid" id="vocab-family"></div>
+
+  <div class="section-title">Food & Drink (La Nourriture)</div>
+  <div class="vocab-grid" id="vocab-food"></div>
+
+  <div class="section-title">Body (Le Corps)</div>
+  <div class="vocab-grid" id="vocab-body"></div>
+
+  <div class="section-title">House (La Maison)</div>
+  <div class="vocab-grid" id="vocab-house"></div>
+
+  <div class="section-title">Common Adjectives</div>
+  <div class="vocab-grid" id="vocab-adj"></div>
+</div>
+
+<!-- A2 GRAMMAR -->
+<div id="page-a2-grammar" class="page">
+  <div class="page-title">A2 — Grammar</div>
+  <div class="page-subtitle">Passé composé, imparfait, futur proche, questions, object pronouns</div>
+
+  <div class="section-title">1. Passé Composé (Past Tense)</div>
+  <p style="margin-bottom:12px">Used for completed, specific past actions. Formed with <strong>avoir</strong> or <strong>être</strong> + past participle.</p>
+  <div class="rule-box">
+    <h4>Structure: avoir/être (présent) + past participle</h4>
+    <ul>
+      <li>Past participle of -ER verbs: <span>parler → parlé, manger → mangé</span></li>
+      <li>Past participle of -IR verbs: <span>finir → fini, choisir → choisi</span></li>
+      <li>Past participle of -RE verbs: <span>vendre → vendu, attendre → attendu</span></li>
+    </ul>
+  </div>
+  <div class="example"><div class="fr-ex">J'ai mangé une pizza. — I ate a pizza.</div><div class="tr-ex">Il a fini son travail. — He finished his work.</div></div>
+  
+  <div class="sub-title">Être Verbs (DR MRS VANDERTRAMP)</div>
+  <div class="info-box note"><strong>📝 DR MRS VANDERTRAMP</strong>These verbs use ÊTRE (not avoir) + agreement with subject: Devenir, Revenir, Monter, Rester, Sortir, Venir, Aller, Naître, Descendre, Entrer, Rentrer, Tomber, Retourner, Arriver, Mourir, Partir. Also all reflexive verbs.</div>
+  <div class="example"><div class="fr-ex">Elle est allée au cinéma. — She went to the cinema.</div><div class="tr-ex">Nous sommes arrivés hier. — We arrived yesterday.</div></div>
+  <div class="info-box warn"><strong>⚠️ AGREEMENT</strong>With être verbs, the past participle agrees: il est allé / elle est allée / ils sont allés / elles sont allées.</div>
+
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Avoir + mangé</th><th>Être + allé(e)</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">j'ai mangé</td><td class="fr">je suis allé(e)</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">tu as mangé</td><td class="fr">tu es allé(e)</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">il a mangé</td><td class="fr">il est allé / elle est allée</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">nous avons mangé</td><td class="fr">nous sommes allé(e)s</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">vous avez mangé</td><td class="fr">vous êtes allé(e)(s)</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">ils ont mangé</td><td class="fr">ils sont allés / elles sont allées</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">2. L'Imparfait (Imperfect)</div>
+  <p style="margin-bottom:12px">Used for ongoing past states, habits, descriptions, and background action. Formed from <strong>nous</strong> present tense stem.</p>
+  <div class="rule-box">
+    <h4>Formula: nous-stem + imparfait endings</h4>
+    <ul>
+      <li><span>je -ais, tu -ais, il/elle -ait</span></li>
+      <li><span>nous -ions, vous -iez, ils/elles -aient</span></li>
+      <li>Exception: être → ét- (j'étais, tu étais...)</li>
+    </ul>
+  </div>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Parler</th><th>Être</th><th>Avoir</th></tr>
+      <tr><td class="pronoun">je/j'</td><td class="fr">parlais</td><td class="fr">étais</td><td class="fr">avais</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">parlais</td><td class="fr">étais</td><td class="fr">avais</td></tr>
+      <tr><td class="pronoun">il/elle/on</td><td class="fr">parlait</td><td class="fr">était</td><td class="fr">avait</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">parlions</td><td class="fr">étions</td><td class="fr">avions</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">parliez</td><td class="fr">étiez</td><td class="fr">aviez</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">parlaient</td><td class="fr">étaient</td><td class="fr">avaient</td></tr>
+    </table>
+  </div>
+  <div class="example"><div class="fr-ex">Quand j'étais enfant, je jouais au foot. — When I was a child, I used to play football.</div><div class="tr-ex">Il faisait beau ce jour-là. — It was nice weather that day.</div></div>
+  <div class="info-box note"><strong>📌 PASSÉ COMPOSÉ vs IMPARFAIT</strong>PC = specific, completed: "I ate." / Imparfait = habit, state, description: "I was eating / I used to eat." They often work together: <em>Je lisais (imparfait) quand il est arrivé (PC).</em></div>
+
+  <div class="section-title">3. Futur Proche (Near Future)</div>
+  <div class="rule-box">
+    <h4>Formula: aller (present) + infinitive</h4>
+    <ul>
+      <li><span>Je vais manger.</span> — I'm going to eat.</li>
+      <li><span>Nous allons partir.</span> — We're going to leave.</li>
+    </ul>
+  </div>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Aller</th><th>Example</th></tr>
+      <tr><td class="fr">je vais</td><td class="fr">je vais travailler — I'm going to work</td></tr>
+      <tr><td class="fr">tu vas</td><td class="fr">tu vas voir — you're going to see</td></tr>
+      <tr><td class="fr">il/elle va</td><td class="fr">elle va partir — she's going to leave</td></tr>
+      <tr><td class="fr">nous allons</td><td class="fr">nous allons manger — we're going to eat</td></tr>
+      <tr><td class="fr">vous allez</td><td class="fr">vous allez réussir — you're going to succeed</td></tr>
+      <tr><td class="fr">ils/elles vont</td><td class="fr">ils vont arriver — they're going to arrive</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">4. Questions</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Method</th><th>Structure</th><th>Example</th></tr>
+      <tr><td>Rising intonation</td><td>Statement + ?</td><td class="fr">Tu parles français ?</td></tr>
+      <tr><td>Est-ce que</td><td>Est-ce que + statement</td><td class="fr">Est-ce que tu parles français ?</td></tr>
+      <tr><td>Inversion (formal)</td><td>Verb-Pronoun</td><td class="fr">Parles-tu français ?</td></tr>
+    </table>
+  </div>
+  <div class="table-wrap" style="margin-top:16px">
+    <table>
+      <tr><th>Question Word</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td class="fr">Qui</td><td>Who</td><td class="fr">Qui est-ce ?</td></tr>
+      <tr><td class="fr">Que / Qu'est-ce que</td><td>What</td><td class="fr">Qu'est-ce que tu fais ?</td></tr>
+      <tr><td class="fr">Où</td><td>Where</td><td class="fr">Où habitez-vous ?</td></tr>
+      <tr><td class="fr">Quand</td><td>When</td><td class="fr">Quand pars-tu ?</td></tr>
+      <tr><td class="fr">Comment</td><td>How</td><td class="fr">Comment ça marche ?</td></tr>
+      <tr><td class="fr">Pourquoi</td><td>Why</td><td class="fr">Pourquoi tu ris ?</td></tr>
+      <tr><td class="fr">Combien (de)</td><td>How much/many</td><td class="fr">Combien ça coûte ?</td></tr>
+      <tr><td class="fr">Quel / Quelle</td><td>Which / What</td><td class="fr">Quel âge as-tu ?</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">5. Direct Object Pronouns</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Person</th><th>Pronoun</th><th>Example</th></tr>
+      <tr><td>1st sing.</td><td class="fr">me / m'</td><td class="fr">Il me connaît. — He knows me.</td></tr>
+      <tr><td>2nd sing.</td><td class="fr">te / t'</td><td class="fr">Je te vois. — I see you.</td></tr>
+      <tr><td>3rd sing. masc.</td><td class="fr">le / l'</td><td class="fr">Je le mange. — I eat it.</td></tr>
+      <tr><td>3rd sing. fem.</td><td class="fr">la / l'</td><td class="fr">Tu la regardes. — You watch her.</td></tr>
+      <tr><td>1st pl.</td><td class="fr">nous</td><td class="fr">Il nous invite. — He invites us.</td></tr>
+      <tr><td>2nd pl.</td><td class="fr">vous</td><td class="fr">Je vous comprends. — I understand you.</td></tr>
+      <tr><td>3rd pl.</td><td class="fr">les</td><td class="fr">Je les aime. — I love them.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- A2 VOCAB -->
+<div id="page-a2-vocab" class="page">
+  <div class="page-title">A2 — Vocabulary</div>
+  <div class="page-subtitle">Work, travel, shopping, weather, emotions, 400+ words</div>
+  
+  <div class="section-title">Work & Jobs (Le Travail)</div>
+  <div class="vocab-grid" id="vocab-work"></div>
+  
+  <div class="section-title">Travel & Transport (Les Transports)</div>
+  <div class="vocab-grid" id="vocab-travel"></div>
+  
+  <div class="section-title">Shopping (Les Achats)</div>
+  <div class="vocab-grid" id="vocab-shop"></div>
+
+  <div class="section-title">Emotions & Feelings</div>
+  <div class="vocab-grid" id="vocab-emo"></div>
+</div>
+
+<!-- B1 GRAMMAR -->
+<div id="page-b1-grammar" class="page">
+  <div class="page-title">B1 — Grammar</div>
+  <div class="page-subtitle">Futur simple, conditionnel, subjonctif intro, relative pronouns, indirect speech</div>
+
+  <div class="section-title">1. Futur Simple (Simple Future)</div>
+  <p style="margin-bottom:12px">For future plans, predictions, promises. Formed: infinitive + future endings.</p>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Ending</th><th>Parler</th><th>Finir</th><th>Vendre</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">-ai</td><td class="fr">parlerai</td><td class="fr">finirai</td><td class="fr">vendrai</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">-as</td><td class="fr">parleras</td><td class="fr">finiras</td><td class="fr">vendras</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">-a</td><td class="fr">parlera</td><td class="fr">finira</td><td class="fr">vendra</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">-ons</td><td class="fr">parlerons</td><td class="fr">finirons</td><td class="fr">vendrons</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">-ez</td><td class="fr">parlerez</td><td class="fr">finirez</td><td class="fr">vendrez</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">-ont</td><td class="fr">parleront</td><td class="fr">finiront</td><td class="fr">vendront</td></tr>
+    </table>
+  </div>
+  <div class="sub-title">Irregular Future Stems</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Verb</th><th>Stem</th><th>Je form</th></tr>
+      <tr><td class="fr">être</td><td class="fr">ser-</td><td class="fr">serai</td></tr>
+      <tr><td class="fr">avoir</td><td class="fr">aur-</td><td class="fr">aurai</td></tr>
+      <tr><td class="fr">aller</td><td class="fr">ir-</td><td class="fr">irai</td></tr>
+      <tr><td class="fr">faire</td><td class="fr">fer-</td><td class="fr">ferai</td></tr>
+      <tr><td class="fr">venir</td><td class="fr">viendr-</td><td class="fr">viendrai</td></tr>
+      <tr><td class="fr">pouvoir</td><td class="fr">pourr-</td><td class="fr">pourrai</td></tr>
+      <tr><td class="fr">vouloir</td><td class="fr">voudr-</td><td class="fr">voudrai</td></tr>
+      <tr><td class="fr">savoir</td><td class="fr">saur-</td><td class="fr">saurai</td></tr>
+      <tr><td class="fr">voir</td><td class="fr">verr-</td><td class="fr">verrai</td></tr>
+      <tr><td class="fr">devoir</td><td class="fr">devr-</td><td class="fr">devrai</td></tr>
+      <tr><td class="fr">falloir</td><td class="fr">faudr-</td><td class="fr">il faudra</td></tr>
+      <tr><td class="fr">courir</td><td class="fr">courr-</td><td class="fr">courrai</td></tr>
+      <tr><td class="fr">envoyer</td><td class="fr">enverr-</td><td class="fr">enverrai</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">2. Conditionnel Présent (Conditional)</div>
+  <p style="margin-bottom:12px">Politeness, hypothetical situations (would). Formed: future stem + imparfait endings.</p>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Ending</th><th>Parler</th><th>Être</th><th>Avoir</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">-ais</td><td class="fr">parlerais</td><td class="fr">serais</td><td class="fr">aurais</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">-ais</td><td class="fr">parlerais</td><td class="fr">serais</td><td class="fr">aurais</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">-ait</td><td class="fr">parlerait</td><td class="fr">serait</td><td class="fr">aurait</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">-ions</td><td class="fr">parlerions</td><td class="fr">serions</td><td class="fr">aurions</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">-iez</td><td class="fr">parleriez</td><td class="fr">seriez</td><td class="fr">auriez</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">-aient</td><td class="fr">parleraient</td><td class="fr">seraient</td><td class="fr">auraient</td></tr>
+    </table>
+  </div>
+  <div class="example"><div class="fr-ex">Je voudrais un café, s'il vous plaît. — I would like a coffee, please.</div><div class="tr-ex">Si j'avais de l'argent, je voyagerais. — If I had money, I would travel.</div></div>
+
+  <div class="section-title">3. Le Subjonctif (Intro)</div>
+  <div class="info-box warn"><strong>⚠️ WHEN TO USE</strong>The subjunctive is required after: wanting/wishing (vouloir que), doubt, emotion, necessity (il faut que), opinions, and conjunctions like bien que, pour que, avant que.</div>
+  <p style="margin-bottom:12px">Formed: ils/elles present stem + subjunctive endings.</p>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Ending</th><th>Parler</th><th>Finir</th><th>Être</th><th>Avoir</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">-e</td><td class="fr">parle</td><td class="fr">finisse</td><td class="fr">sois</td><td class="fr">aie</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">-es</td><td class="fr">parles</td><td class="fr">finisses</td><td class="fr">sois</td><td class="fr">aies</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">-e</td><td class="fr">parle</td><td class="fr">finisse</td><td class="fr">soit</td><td class="fr">ait</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">-ions</td><td class="fr">parlions</td><td class="fr">finissions</td><td class="fr">soyons</td><td class="fr">ayons</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">-iez</td><td class="fr">parliez</td><td class="fr">finissiez</td><td class="fr">soyez</td><td class="fr">ayez</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">-ent</td><td class="fr">parlent</td><td class="fr">finissent</td><td class="fr">soient</td><td class="fr">aient</td></tr>
+    </table>
+  </div>
+  <div class="example"><div class="fr-ex">Il faut que tu sois là. — You need to be there.</div><div class="tr-ex">Je veux qu'elle vienne. — I want her to come.</div></div>
+
+  <div class="section-title">4. Relative Pronouns</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Pronoun</th><th>Role</th><th>Example</th></tr>
+      <tr><td class="fr">qui</td><td>Subject</td><td class="fr">L'homme qui parle est mon père. — The man who is talking is my father.</td></tr>
+      <tr><td class="fr">que / qu'</td><td>Direct object</td><td class="fr">Le livre que je lis est intéressant. — The book I'm reading is interesting.</td></tr>
+      <tr><td class="fr">où</td><td>Place / time</td><td class="fr">La ville où je vis. — The city where I live.</td></tr>
+      <tr><td class="fr">dont</td><td>Of which / whose</td><td class="fr">L'ami dont je t'ai parlé. — The friend I told you about.</td></tr>
+      <tr><td class="fr">lequel / laquelle</td><td>After prepositions</td><td class="fr">La table sur laquelle... — The table on which...</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">5. Reflexive Verbs</div>
+  <div class="rule-box">
+    <h4>Structure: se + verb. Subject acts on itself.</h4>
+    <ul>
+      <li><span>je me lève</span> — I get up</li>
+      <li><span>tu te couches</span> — you go to bed</li>
+      <li><span>il se lave</span> — he washes (himself)</li>
+      <li><span>nous nous parlons</span> — we talk to each other</li>
+    </ul>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Verb</th><th>Meaning</th><th>Je form</th></tr>
+      <tr><td class="fr">se lever</td><td>to get up</td><td class="fr">je me lève</td></tr>
+      <tr><td class="fr">se coucher</td><td>to go to bed</td><td class="fr">je me couche</td></tr>
+      <tr><td class="fr">se réveiller</td><td>to wake up</td><td class="fr">je me réveille</td></tr>
+      <tr><td class="fr">s'habiller</td><td>to get dressed</td><td class="fr">je m'habille</td></tr>
+      <tr><td class="fr">se laver</td><td>to wash</td><td class="fr">je me lave</td></tr>
+      <tr><td class="fr">se souvenir</td><td>to remember</td><td class="fr">je me souviens</td></tr>
+      <tr><td class="fr">s'appeler</td><td>to be called</td><td class="fr">je m'appelle</td></tr>
+      <tr><td class="fr">se sentir</td><td>to feel</td><td class="fr">je me sens</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- B1 VOCAB -->
+<div id="page-b1-vocab" class="page">
+  <div class="page-title">B1 — Vocabulary</div>
+  <div class="page-subtitle">Society, politics, culture, health, media, environment — 500+ words</div>
+  
+  <div class="section-title">Society & Politics</div>
+  <div class="vocab-grid" id="vocab-society"></div>
+  
+  <div class="section-title">Health & Body</div>
+  <div class="vocab-grid" id="vocab-health"></div>
+  
+  <div class="section-title">Culture & Arts</div>
+  <div class="vocab-grid" id="vocab-culture"></div>
+
+  <div class="section-title">Environment</div>
+  <div class="vocab-grid" id="vocab-env"></div>
+</div>
+
+<!-- B2 GRAMMAR -->
+<div id="page-b2-grammar" class="page">
+  <div class="page-title">B2 — Advanced Grammar</div>
+  <div class="page-subtitle">Passé simple, plus-que-parfait, subjonctif passé, conditionnel passé, advanced structures</div>
+
+  <div class="section-title">1. Plus-que-parfait (Pluperfect)</div>
+  <p style="margin-bottom:12px">Action that happened before another past action. Had done. Formed: avoir/être (imparfait) + past participle.</p>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Avoir + mangé</th><th>Être + parti(e)</th></tr>
+      <tr><td class="pronoun">j'</td><td class="fr">j'avais mangé</td><td class="fr">j'étais parti(e)</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">tu avais mangé</td><td class="fr">tu étais parti(e)</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">il avait mangé</td><td class="fr">elle était partie</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">nous avions mangé</td><td class="fr">nous étions parti(e)s</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">vous aviez mangé</td><td class="fr">vous étiez parti(e)(s)</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">ils avaient mangé</td><td class="fr">elles étaient parties</td></tr>
+    </table>
+  </div>
+  <div class="example"><div class="fr-ex">Quand je suis arrivé, il avait déjà mangé. — When I arrived, he had already eaten.</div></div>
+
+  <div class="section-title">2. Conditionnel Passé (Past Conditional)</div>
+  <p style="margin-bottom:12px">Would have done. Formed: avoir/être (conditionnel) + past participle.</p>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Avoir + mangé</th><th>Être + allé(e)</th></tr>
+      <tr><td class="pronoun">j'</td><td class="fr">j'aurais mangé</td><td class="fr">je serais allé(e)</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">tu aurais mangé</td><td class="fr">tu serais allé(e)</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">il aurait mangé</td><td class="fr">elle serait allée</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">nous aurions mangé</td><td class="fr">nous serions allé(e)s</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">vous auriez mangé</td><td class="fr">vous seriez allé(e)(s)</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">ils auraient mangé</td><td class="fr">elles seraient allées</td></tr>
+    </table>
+  </div>
+  <div class="example"><div class="fr-ex">Si j'avais su, je n'aurais pas accepté. — If I had known, I would not have accepted.</div></div>
+
+  <div class="section-title">3. Subjonctif Passé</div>
+  <p style="margin-bottom:12px">Past subjunctive. Formed: avoir/être (subjunctif présent) + past participle.</p>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>Avoir + parlé</th><th>Être + venu(e)</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">que j'aie parlé</td><td class="fr">que je sois venu(e)</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">que tu aies parlé</td><td class="fr">que tu sois venu(e)</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">qu'il ait parlé</td><td class="fr">qu'elle soit venue</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">que nous ayons parlé</td><td class="fr">que nous soyons venu(e)s</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">que vous ayez parlé</td><td class="fr">que vous soyez venu(e)(s)</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">qu'ils aient parlé</td><td class="fr">qu'elles soient venues</td></tr>
+    </table>
+  </div>
+  <div class="example"><div class="fr-ex">Je suis content qu'il soit venu. — I'm glad he came.</div></div>
+
+  <div class="section-title">4. Passé Simple (Literary Past)</div>
+  <div class="info-box note"><strong>📚 CONTEXT</strong>Used mainly in literature and formal writing. You need to recognize it; rarely used in speech. Regular verbs:</div>
+  <div class="table-wrap">
+    <table class="conj-table">
+      <tr><th>Pronoun</th><th>-ER (parler)</th><th>-IR (finir)</th><th>-RE (vendre)</th></tr>
+      <tr><td class="pronoun">je</td><td class="fr">parlai</td><td class="fr">finis</td><td class="fr">vendis</td></tr>
+      <tr><td class="pronoun">tu</td><td class="fr">parlas</td><td class="fr">finis</td><td class="fr">vendis</td></tr>
+      <tr><td class="pronoun">il/elle</td><td class="fr">parla</td><td class="fr">finit</td><td class="fr">vendit</td></tr>
+      <tr><td class="pronoun">nous</td><td class="fr">parlâmes</td><td class="fr">finîmes</td><td class="fr">vendîmes</td></tr>
+      <tr><td class="pronoun">vous</td><td class="fr">parlâtes</td><td class="fr">finîtes</td><td class="fr">vendîtes</td></tr>
+      <tr><td class="pronoun">ils/elles</td><td class="fr">parlèrent</td><td class="fr">finirent</td><td class="fr">vendirent</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">5. Advanced Conditional Structures</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Si clause</th><th>Main clause</th><th>Example</th></tr>
+      <tr><td>Type 1 (likely)</td><td>Si + présent</td><td>Futur simple</td><td class="fr">Si tu viens, je serai là.</td></tr>
+      <tr><td>Type 2 (hypothetical)</td><td>Si + imparfait</td><td>Conditionnel présent</td><td class="fr">Si j'avais le temps, j'apprendrais.</td></tr>
+      <tr><td>Type 3 (impossible past)</td><td>Si + plus-que-parfait</td><td>Conditionnel passé</td><td class="fr">Si j'avais su, j'aurais agi.</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title">6. Passive Voice</div>
+  <div class="rule-box">
+    <h4>Structure: être (any tense) + past participle (agrees with subject)</h4>
+    <ul>
+      <li><span>Active:</span> Le chat mange la souris. — The cat eats the mouse.</li>
+      <li><span>Passive:</span> La souris est mangée par le chat. — The mouse is eaten by the cat.</li>
+      <li>Agent introduced by <span>par</span> (by) or <span>de</span> (from)</li>
+    </ul>
+  </div>
+
+  <div class="section-title">7. Important B2 Conjunctions</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Conjunction</th><th>Meaning</th><th>Mood after</th><th>Example</th></tr>
+      <tr><td class="fr">bien que</td><td>although</td><td>Subjonctif</td><td class="fr">Bien qu'il soit fatigué, il travaille.</td></tr>
+      <tr><td class="fr">quoique</td><td>although</td><td>Subjonctif</td><td class="fr">Quoique ce soit difficile...</td></tr>
+      <tr><td class="fr">afin que / pour que</td><td>so that</td><td>Subjonctif</td><td class="fr">Pour qu'il comprenne...</td></tr>
+      <tr><td class="fr">avant que</td><td>before</td><td>Subjonctif</td><td class="fr">Avant qu'il parte...</td></tr>
+      <tr><td class="fr">à moins que</td><td>unless</td><td>Subjonctif</td><td class="fr">À moins qu'il vienne...</td></tr>
+      <tr><td class="fr">après que</td><td>after</td><td>Indicatif</td><td class="fr">Après qu'il est arrivé...</td></tr>
+      <tr><td class="fr">parce que</td><td>because</td><td>Indicatif</td><td class="fr">Parce qu'il pleut...</td></tr>
+      <tr><td class="fr">puisque</td><td>since/as</td><td>Indicatif</td><td class="fr">Puisque tu le sais...</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- B2 VOCAB -->
+<div id="page-b2-vocab" class="page">
+  <div class="page-title">B2 — Vocabulary</div>
+  <div class="page-subtitle">Advanced, nuanced vocabulary for complex topics</div>
+  
+  <div class="section-title">Argumentation & Opinion</div>
+  <div class="vocab-grid" id="vocab-arg"></div>
+  
+  <div class="section-title">Economy & Business</div>
+  <div class="vocab-grid" id="vocab-econ"></div>
+
+  <div class="section-title">Abstract Concepts</div>
+  <div class="vocab-grid" id="vocab-abstract"></div>
+</div>
+
+<!-- VERBS PAGE -->
+<div id="page-verbs" class="page">
+  <div class="page-title">Verb Conjugation</div>
+  <div class="page-subtitle">Search any verb and see all tenses</div>
+  
+  <div class="verb-search-wrap">
+    <input class="verb-search" id="verbInput" type="text" placeholder="Type a verb (e.g. parler, être, aller)..." oninput="searchVerb(this.value)">
+    <button class="btn btn-primary" onclick="searchVerb(document.getElementById('verbInput').value)">Conjugate</button>
+  </div>
+  
+  <div class="tabs" id="verbTabs">
+    <button class="tab active" onclick="switchVerbTense('present',this)">Présent</button>
+    <button class="tab" onclick="switchVerbTense('passe_compose',this)">Passé Composé</button>
+    <button class="tab" onclick="switchVerbTense('imparfait',this)">Imparfait</button>
+    <button class="tab" onclick="switchVerbTense('futur_simple',this)">Futur Simple</button>
+    <button class="tab" onclick="switchVerbTense('conditionnel',this)">Conditionnel</button>
+    <button class="tab" onclick="switchVerbTense('subjonctif',this)">Subjonctif</button>
+    <button class="tab" onclick="switchVerbTense('plus_que_parfait',this)">Plus-que-parfait</button>
+    <button class="tab" onclick="switchVerbTense('cond_passe',this)">Cond. Passé</button>
+  </div>
+  
+  <div id="verb-result"></div>
+
+  <div class="section-title">Common Irregular Verbs — All Tenses</div>
+  <div id="all-verbs-list"></div>
+</div>
+
+<!-- TENSES PAGE -->
+<div id="page-tenses" class="page">
+  <div class="page-title">French Tenses — Complete Guide</div>
+  <div class="page-subtitle">When to use each tense with examples</div>
+  
+  <div class="card" style="margin-bottom:24px">
+    <h3 style="font-family:var(--font-display);font-size:18px;margin-bottom:12px;color:var(--accent)">Tense Overview</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Tense</th><th>Name</th><th>Use</th><th>Example</th></tr>
+        <tr><td class="fr">Présent</td><td>Present</td><td>Now, habits, truths</td><td class="fr">Je mange.</td></tr>
+        <tr><td class="fr">Passé composé</td><td>Present perfect / past</td><td>Completed past actions</td><td class="fr">J'ai mangé.</td></tr>
+        <tr><td class="fr">Imparfait</td><td>Imperfect</td><td>Past habits, states, descriptions</td><td class="fr">Je mangeais.</td></tr>
+        <tr><td class="fr">Plus-que-parfait</td><td>Pluperfect</td><td>Before another past event</td><td class="fr">J'avais mangé.</td></tr>
+        <tr><td class="fr">Passé simple</td><td>Simple past (literary)</td><td>Completed past (written)</td><td class="fr">Je mangeai.</td></tr>
+        <tr><td class="fr">Futur proche</td><td>Near future</td><td>Immediate future (going to)</td><td class="fr">Je vais manger.</td></tr>
+        <tr><td class="fr">Futur simple</td><td>Simple future</td><td>Future plans/predictions</td><td class="fr">Je mangerai.</td></tr>
+        <tr><td class="fr">Futur antérieur</td><td>Future perfect</td><td>Will have done</td><td class="fr">J'aurai mangé.</td></tr>
+        <tr><td class="fr">Conditionnel présent</td><td>Present conditional</td><td>Would / politeness</td><td class="fr">Je mangerais.</td></tr>
+        <tr><td class="fr">Conditionnel passé</td><td>Past conditional</td><td>Would have done</td><td class="fr">J'aurais mangé.</td></tr>
+        <tr><td class="fr">Subjonctif présent</td><td>Present subjunctive</td><td>Doubt, wish, emotion</td><td class="fr">que je mange</td></tr>
+        <tr><td class="fr">Subjonctif passé</td><td>Past subjunctive</td><td>Past doubt/wish/emotion</td><td class="fr">que j'aie mangé</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">Timeline: When to Use Each Tense</div>
+  <div class="card">
+    <div class="sub-title">Past Tenses — Choosing the Right One</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Situation</th><th>Tense</th><th>Example</th></tr>
+        <tr><td>Specific past event (completed)</td><td class="fr">Passé composé</td><td class="fr">Il est parti à 8h.</td></tr>
+        <tr><td>Ongoing state/habit in past</td><td class="fr">Imparfait</td><td class="fr">Il travaillait chaque jour.</td></tr>
+        <tr><td>Description in past</td><td class="fr">Imparfait</td><td class="fr">Il faisait beau.</td></tr>
+        <tr><td>Interrupted action</td><td class="fr">Imparfait + PC</td><td class="fr">Je dormais quand il a appelé.</td></tr>
+        <tr><td>Before another past event</td><td class="fr">Plus-que-parfait</td><td class="fr">Il était déjà parti.</td></tr>
+        <tr><td>Formal/literary narrative</td><td class="fr">Passé simple</td><td class="fr">Il prit la plume.</td></tr>
+      </table>
+    </div>
+    
+    <div class="sub-title" style="margin-top:24px">Future Tenses — Choosing the Right One</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Situation</th><th>Tense</th><th>Example</th></tr>
+        <tr><td>Immediate / planned future</td><td class="fr">Futur proche</td><td class="fr">Je vais partir demain.</td></tr>
+        <tr><td>General future / prediction</td><td class="fr">Futur simple</td><td class="fr">Il pleuvra demain.</td></tr>
+        <tr><td>Before a future point</td><td class="fr">Futur antérieur</td><td class="fr">J'aurai fini avant midi.</td></tr>
+        <tr><td>Hypothetical (if...)</td><td class="fr">Conditionnel</td><td class="fr">J'irais si j'avais le temps.</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- READING A1 -->
+<div id="page-reading-a1" class="page">
+  <div class="page-title">A1 Reading Practice</div>
+  <div class="page-subtitle">Simple texts with vocabulary tooltips and comprehension questions</div>
+
+  <div class="reading-card">
+    <div class="reading-header">
+      <h3>Ma famille</h3>
+      <span class="level-badge badge-a1">A1</span>
+    </div>
+    <div class="reading-body">
+      <div class="reading-text">
+        Je <span class="highlight">m'appelle<span class="tooltip">my name is / I am called</span></span> Lucas. J'ai vingt-cinq ans. J'<span class="highlight">habite<span class="tooltip">live (I live)</span></span> à Paris avec ma famille. Ma mère <span class="highlight">s'appelle<span class="tooltip">is called / her name is</span></span> Marie. Elle est <span class="highlight">médecin<span class="tooltip">doctor</span></span>. Mon père s'appelle Paul. Il est <span class="highlight">professeur<span class="tooltip">teacher</span></span>. J'ai une <span class="highlight">sœur<span class="tooltip">sister</span></span> et un <span class="highlight">frère<span class="tooltip">brother</span></span>. Ma sœur a seize ans et mon frère a dix ans. Nous <span class="highlight">aimons<span class="tooltip">love / like (we love)</span></span> manger ensemble le soir. <span class="highlight">Le week-end<span class="tooltip">on the weekend</span></span>, nous allons souvent au <span class="highlight">parc<span class="tooltip">park</span></span> ou au cinéma. Nous sommes une famille <span class="highlight">heureuse<span class="tooltip">happy (feminine)</span></span>.
+      </div>
+      <div class="reading-qs">
+        <div class="reading-q"><p>1. How old is Lucas?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>2. What does his mother do for work?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>3. How many siblings does Lucas have?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>4. What does the family do on weekends?</p><input type="text" placeholder="Your answer..."></div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <strong style="font-size:12px;color:var(--muted);letter-spacing:1px">ANSWERS:</strong>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px">1. He is 25 years old. 2. She is a doctor. 3. Two (a sister 16 and a brother 10). 4. They go to the park or cinema.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="reading-card">
+    <div class="reading-header">
+      <h3>La journée de Sophie</h3>
+      <span class="level-badge badge-a1">A1</span>
+    </div>
+    <div class="reading-body">
+      <div class="reading-text">
+        Sophie se <span class="highlight">lève<span class="tooltip">gets up</span></span> à sept heures du matin. Elle prend une <span class="highlight">douche<span class="tooltip">shower</span></span> et elle <span class="highlight">s'habille<span class="tooltip">gets dressed</span></span>. Au <span class="highlight">petit-déjeuner<span class="tooltip">breakfast</span></span>, elle mange du pain avec du beurre et elle boit du café. Elle <span class="highlight">part<span class="tooltip">leaves / departs</span></span> à huit heures pour aller au travail. Elle <span class="highlight">travaille<span class="tooltip">works</span></span> dans un bureau. À midi, elle <span class="highlight">déjeune<span class="tooltip">has lunch</span></span> avec ses collègues. Le soir, elle <span class="highlight">rentre<span class="tooltip">comes home</span></span> chez elle à dix-neuf heures. Elle <span class="highlight">prépare<span class="tooltip">prepares</span></span> le dîner et regarde la <span class="highlight">télévision<span class="tooltip">television</span></span>. Elle se couche à vingt-trois heures.
+      </div>
+      <div class="reading-qs">
+        <div class="reading-q"><p>1. What time does Sophie wake up?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>2. What does she eat for breakfast?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>3. Where does she work?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>4. What does she do in the evening?</p><input type="text" placeholder="Your answer..."></div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <strong style="font-size:12px;color:var(--muted);letter-spacing:1px">ANSWERS:</strong>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px">1. At 7am. 2. Bread and butter, coffee. 3. In an office. 4. Prepares dinner and watches TV.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- READING B1 -->
+<div id="page-reading-b1" class="page">
+  <div class="page-title">B1 Reading Practice</div>
+  <div class="page-subtitle">Intermediate texts on society and everyday topics</div>
+
+  <div class="reading-card">
+    <div class="reading-header">
+      <h3>Les Réseaux Sociaux</h3>
+      <span class="level-badge badge-b1">B1</span>
+    </div>
+    <div class="reading-body">
+      <div class="reading-text">
+        Aujourd'hui, les réseaux sociaux <span class="highlight">occupent<span class="tooltip">occupy / take up</span></span> une place considérable dans notre vie quotidienne. Des millions de personnes les utilisent pour <span class="highlight">rester en contact<span class="tooltip">stay in touch</span></span> avec leurs amis et leur famille, partager des photos et des opinions, ou <span class="highlight">s'informer<span class="tooltip">to inform oneself / get information</span></span> sur l'actualité. Cependant, cette <span class="highlight">omniprésence<span class="tooltip">omnipresence / being everywhere</span></span> soulève de nombreuses questions. Certains <span class="highlight">estiment<span class="tooltip">believe / estimate</span></span> que ces plateformes <span class="highlight">nuisent<span class="tooltip">harm (nuire)</span></span> à la santé mentale, en particulier chez les jeunes, qui peuvent développer une <span class="highlight">dépendance<span class="tooltip">addiction / dependency</span></span> au regard des autres. D'autres, en revanche, soulignent les <span class="highlight">avantages<span class="tooltip">advantages / benefits</span></span> de ces outils : ils permettent de créer des <span class="highlight">liens<span class="tooltip">links / connections / ties</span></span> au-delà des frontières et de <span class="highlight">mobiliser<span class="tooltip">to mobilize / rally</span></span> des communautés autour de causes importantes. La question n'est donc pas de savoir si les réseaux sociaux sont bons ou mauvais, mais comment les utiliser de manière <span class="highlight">responsable<span class="tooltip">responsible</span></span>.
+      </div>
+      <div class="reading-qs">
+        <div class="reading-q"><p>1. Nommez deux usages principaux des réseaux sociaux mentionnés dans le texte.</p><input type="text" placeholder="Your answer in English or French..."></div>
+        <div class="reading-q"><p>2. What negative effect is mentioned, especially for young people?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>3. What positive aspect does the text highlight?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>4. What is the author's conclusion?</p><input type="text" placeholder="Your answer..."></div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <strong style="font-size:12px;color:var(--muted);letter-spacing:1px">ANSWERS:</strong>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px">1. Stay in contact with friends/family; share photos/opinions; stay informed. 2. Harm to mental health / addiction to others' opinions. 3. Creating connections beyond borders, mobilizing communities. 4. It's not about good/bad, but about using them responsibly.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- READING B2 -->
+<div id="page-reading-b2" class="page">
+  <div class="page-title">B2 Reading Practice</div>
+  <div class="page-subtitle">Complex texts — argumentation, literature, editorial</div>
+
+  <div class="reading-card">
+    <div class="reading-header">
+      <h3>L'Intelligence Artificielle et l'avenir du travail</h3>
+      <span class="level-badge badge-b2">B2</span>
+    </div>
+    <div class="reading-body">
+      <div class="reading-text">
+        L'essor <span class="highlight">fulgurant<span class="tooltip">meteoric / lightning fast</span></span> de l'intelligence artificielle <span class="highlight">suscite<span class="tooltip">arouses / generates (susciter)</span></span> à la fois enthousiasme et <span class="highlight">inquiétude<span class="tooltip">worry / unease</span></span> quant à l'avenir du marché du travail. Si certains économistes <span class="highlight">préconisent<span class="tooltip">recommend / advocate</span></span> une adaptation sereine, arguant que chaque <span class="highlight">révolution technologique<span class="tooltip">technological revolution</span></span> a toujours créé davantage d'emplois qu'elle n'en a détruits, d'autres mettent en garde contre une <span class="highlight">rupture<span class="tooltip">rupture / break / disruption</span></span> sans précédent. Contrairement aux précédentes vagues d'<span class="highlight">automatisation<span class="tooltip">automation</span></span> qui touchaient principalement les tâches <span class="highlight">manuelles<span class="tooltip">manual</span></span>, l'IA s'attaque désormais aux professions <span class="highlight">intellectuelles<span class="tooltip">intellectual / white-collar</span></span>, remettant en question des métiers autrefois jugés <span class="highlight">à l'abri<span class="tooltip">safe / sheltered</span></span> de la <span class="highlight">concurrence<span class="tooltip">competition</span></span> des machines. La formation continue et l'<span class="highlight">adaptabilité<span class="tooltip">adaptability</span></span> semblent dès lors constituer les seules <span class="highlight">réponses viables<span class="tooltip">viable answers / responses</span></span> à cette <span class="highlight">mutation<span class="tooltip">transformation / change</span></span> profonde du monde du travail.
+      </div>
+      <div class="reading-qs">
+        <div class="reading-q"><p>1. Quel argument avancent les économistes optimistes face à l'IA ?</p><input type="text" placeholder="Répondez en français ou en anglais..."></div>
+        <div class="reading-q"><p>2. In what way does the current wave of AI differ from previous automation?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>3. What does the author suggest as solutions?</p><input type="text" placeholder="Your answer..."></div>
+        <div class="reading-q"><p>4. Find and explain the meaning of "à l'abri" in context.</p><input type="text" placeholder="Your answer..."></div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <strong style="font-size:12px;color:var(--muted);letter-spacing:1px">ANSWERS:</strong>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px">1. Every technological revolution has always created more jobs than it destroyed. 2. Previous automation hit manual tasks; AI now targets intellectual/white-collar professions. 3. Lifelong learning and adaptability. 4. "Protected / safe from" — jobs previously considered safe from machine competition.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div id="page-quiz" class="page">
+  <div class="page-title">Quiz</div>
+  <div class="page-subtitle" data-i18n="quiz_sub">Test your French knowledge across all levels</div>
+  
+  <div id="quiz-setup">
+    <div class="sub-title">Select Quiz Type</div>
+    <div class="quiz-type-select">
+      <button class="quiz-type-btn selected" data-type="vocab" onclick="selectQuizType(this)">Vocabulary</button>
+      <button class="quiz-type-btn" data-type="grammar" onclick="selectQuizType(this)">Grammar</button>
+      <button class="quiz-type-btn" data-type="conjugation" onclick="selectQuizType(this)">Conjugation</button>
+      <button class="quiz-type-btn" data-type="translation" onclick="selectQuizType(this)">Translation</button>
+      <button class="quiz-type-btn" data-type="mixed" onclick="selectQuizType(this)">Mixed (All)</button>
+    </div>
+    <div class="sub-title">Select Level</div>
+    <div class="quiz-type-select">
+      <button class="quiz-type-btn selected" data-level="a1" onclick="selectQuizLevel(this)">A1</button>
+      <button class="quiz-type-btn" data-level="a2" onclick="selectQuizLevel(this)">A2</button>
+      <button class="quiz-type-btn" data-level="b1" onclick="selectQuizLevel(this)">B1</button>
+      <button class="quiz-type-btn" data-level="b2" onclick="selectQuizLevel(this)">B2</button>
+      <button class="quiz-type-btn" data-level="all" onclick="selectQuizLevel(this)">All Levels</button>
+    </div>
+    <button class="btn btn-primary" style="margin-top:24px" onclick="startQuiz()">Start Quiz →</button>
+  </div>
+  
+  <div id="quiz-active" style="display:none">
+    <div class="quiz-container">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span id="quiz-counter" style="font-size:13px;color:var(--muted)">Question 1 / 10</span>
+        <span id="quiz-score-live" style="font-size:13px;color:var(--accent)">Score: 0</span>
+      </div>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-progress-bar" style="width:10%"></div></div>
+      <div class="quiz-q" id="quiz-question">Question text</div>
+      <div class="quiz-context" id="quiz-context"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="quiz-next" id="quiz-next">
+        <button class="btn btn-primary" onclick="nextQuestion()">Next Question →</button>
+        <button class="btn btn-outline" onclick="endQuiz()">End Quiz</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="quiz-results" style="display:none">
+    <div class="quiz-score-card">
+      <div class="score-num" id="final-score">8/10</div>
+      <div class="score-label" id="final-label">Great job!</div>
+      <div style="margin-bottom:32px" id="score-breakdown"></div>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button class="btn btn-primary" onclick="startQuiz()">Try Again</button>
+        <button class="btn btn-outline" onclick="resetQuiz()">Back to Setup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FILL IN BLANKS -->
+<div id="page-fill" class="page">
+  <div class="page-title">Fill in the Blanks</div>
+  <div class="page-subtitle">Practice conjugation and grammar in context</div>
+  <div id="fill-exercises"></div>
+  <div style="margin-top:20px;display:flex;gap:12px">
+    <button class="btn btn-primary" onclick="checkFill()">Check Answers</button>
+    <button class="btn btn-outline" onclick="resetFill()">Reset</button>
+    <button class="btn btn-outline" onclick="genFill()">New Exercises</button>
+  </div>
+  <div id="fill-score" style="margin-top:16px;font-size:15px;font-weight:600;color:var(--accent)"></div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+const VOCAB = {
+  family: [
+    {w:"la mère",t:"mother"},{w:"le père",t:"father"},{w:"le frère",t:"brother"},
+    {w:"la sœur",t:"sister"},{w:"le fils",t:"son"},{w:"la fille",t:"daughter"},
+    {w:"les parents",t:"parents"},{w:"le mari",t:"husband"},{w:"la femme",t:"wife / woman"},
+    {w:"le grand-père",t:"grandfather"},{w:"la grand-mère",t:"grandmother"},
+    {w:"l'oncle",t:"uncle"},{w:"la tante",t:"aunt"},{w:"le cousin",t:"cousin (m)"},
+    {w:"la cousine",t:"cousin (f)"},{w:"le neveu",t:"nephew"},{w:"la nièce",t:"niece"},
+    {w:"le bébé",t:"baby"},{w:"l'enfant",t:"child"},{w:"les jumeaux",t:"twins"}
+  ],
+  food: [
+    {w:"le pain",t:"bread"},{w:"le fromage",t:"cheese"},{w:"la viande",t:"meat"},
+    {w:"le poisson",t:"fish"},{w:"les légumes",t:"vegetables"},{w:"les fruits",t:"fruits"},
+    {w:"l'eau",t:"water"},{w:"le vin",t:"wine"},{w:"la bière",t:"beer"},
+    {w:"le café",t:"coffee"},{w:"le thé",t:"tea"},{w:"le lait",t:"milk"},
+    {w:"l'œuf",t:"egg"},{w:"le beurre",t:"butter"},{w:"le sucre",t:"sugar"},
+    {w:"le sel",t:"salt"},{w:"la pomme",t:"apple"},{w:"la tomate",t:"tomato"},
+    {w:"le riz",t:"rice"},{w:"les pâtes",t:"pasta"},{w:"le poulet",t:"chicken"},
+    {w:"le gâteau",t:"cake"},{w:"la soupe",t:"soup"},{w:"la salade",t:"salad"}
+  ],
+  body: [
+    {w:"la tête",t:"head"},{w:"le visage",t:"face"},{w:"les yeux",t:"eyes"},
+    {w:"le nez",t:"nose"},{w:"la bouche",t:"mouth"},{w:"les oreilles",t:"ears"},
+    {w:"les cheveux",t:"hair"},{w:"le cou",t:"neck"},{w:"les épaules",t:"shoulders"},
+    {w:"le bras",t:"arm"},{w:"la main",t:"hand"},{w:"les doigts",t:"fingers"},
+    {w:"la jambe",t:"leg"},{w:"le pied",t:"foot"},{w:"le dos",t:"back"},
+    {w:"le cœur",t:"heart"},{w:"le ventre",t:"stomach/belly"},{w:"le genou",t:"knee"}
+  ],
+  house: [
+    {w:"la maison",t:"house"},{w:"l'appartement",t:"apartment"},{w:"la chambre",t:"bedroom"},
+    {w:"la cuisine",t:"kitchen"},{w:"le salon",t:"living room"},{w:"la salle de bain",t:"bathroom"},
+    {w:"les toilettes",t:"toilet/WC"},{w:"la porte",t:"door"},{w:"la fenêtre",t:"window"},
+    {w:"le lit",t:"bed"},{w:"la table",t:"table"},{w:"la chaise",t:"chair"},
+    {w:"l'escalier",t:"stairs"},{w:"le jardin",t:"garden"},{w:"le garage",t:"garage"}
+  ],
+  adj: [
+    {w:"grand(e)",t:"tall / big"},{w:"petit(e)",t:"small / short"},{w:"beau/belle",t:"beautiful"},
+    {w:"laid(e)",t:"ugly"},{w:"intelligent(e)",t:"intelligent"},{w:"stupide",t:"stupid"},
+    {w:"rapide",t:"fast"},{w:"lent(e)",t:"slow"},{w:"chaud(e)",t:"hot/warm"},
+    {w:"froid(e)",t:"cold"},{w:"nouveau/nouvelle",t:"new"},{w:"vieux/vieille",t:"old"},
+    {w:"heureux/heureuse",t:"happy"},{w:"triste",t:"sad"},{w:"fort(e)",t:"strong"},
+    {w:"faible",t:"weak"},{w:"facile",t:"easy"},{w:"difficile",t:"difficult"}
+  ],
+  work: [
+    {w:"le travail",t:"work"},{w:"le bureau",t:"office"},{w:"l'entreprise",t:"company"},
+    {w:"le patron",t:"boss"},{w:"le collègue",t:"colleague"},{w:"le salaire",t:"salary"},
+    {w:"la réunion",t:"meeting"},{w:"l'emploi",t:"employment/job"},{w:"le chômage",t:"unemployment"},
+    {w:"le médecin",t:"doctor"},{w:"l'infirmière",t:"nurse"},{w:"l'enseignant",t:"teacher"},
+    {w:"l'avocat",t:"lawyer"},{w:"l'ingénieur",t:"engineer"},{w:"le vendeur",t:"salesperson"},
+    {w:"le chef",t:"chief/cook"},{w:"travailler",t:"to work"},{w:"embaucher",t:"to hire"}
+  ],
+  travel: [
+    {w:"l'avion",t:"plane"},{w:"le train",t:"train"},{w:"le bus",t:"bus"},{w:"la voiture",t:"car"},
+    {w:"le métro",t:"subway/metro"},{w:"le bateau",t:"boat"},{w:"l'aéroport",t:"airport"},
+    {w:"la gare",t:"train station"},{w:"le billet",t:"ticket"},{w:"le passeport",t:"passport"},
+    {w:"la valise",t:"suitcase"},{w:"l'hôtel",t:"hotel"},{w:"la chambre",t:"room"},
+    {w:"voyager",t:"to travel"},{w:"partir",t:"to leave"},{w:"arriver",t:"to arrive"},
+    {w:"réserver",t:"to book/reserve"},{w:"la carte",t:"map/card"}
+  ],
+  shop: [
+    {w:"le magasin",t:"shop/store"},{w:"le supermarché",t:"supermarket"},
+    {w:"le marché",t:"market"},{w:"acheter",t:"to buy"},{w:"vendre",t:"to sell"},
+    {w:"le prix",t:"price"},{w:"cher/chère",t:"expensive"},{w:"bon marché",t:"cheap"},
+    {w:"la caisse",t:"checkout/cash register"},{w:"payer",t:"to pay"},
+    {w:"la carte bancaire",t:"bank card"},{w:"l'argent",t:"money"},
+    {w:"la monnaie",t:"change / coins"},{w:"le reçu",t:"receipt"}
+  ],
+  emo: [
+    {w:"heureux/heureuse",t:"happy"},{w:"triste",t:"sad"},{w:"en colère",t:"angry"},
+    {w:"effrayé(e)",t:"scared"},{w:"surpris(e)",t:"surprised"},{w:"déçu(e)",t:"disappointed"},
+    {w:"content(e)",t:"pleased/happy"},{w:"inquiet/inquiète",t:"worried"},
+    {w:"jaloux/jalouse",t:"jealous"},{w:"fier/fière",t:"proud"},{w:"amoureux/amoureuse",t:"in love"},
+    {w:"seul(e)",t:"alone/lonely"},{w:"fatigué(e)",t:"tired"},{w:"stressé(e)",t:"stressed"}
+  ],
+  society: [
+    {w:"la société",t:"society"},{w:"le gouvernement",t:"government"},{w:"la loi",t:"law"},
+    {w:"l'élection",t:"election"},{w:"le citoyen",t:"citizen"},{w:"les droits",t:"rights"},
+    {w:"la liberté",t:"freedom"},{w:"l'égalité",t:"equality"},{w:"la justice",t:"justice"},
+    {w:"la politique",t:"politics"},{w:"le parti",t:"political party"},{w:"voter",t:"to vote"},
+    {w:"l'impôt",t:"tax"},{w:"la sécurité",t:"security"},{w:"la pauvreté",t:"poverty"},
+    {w:"la richesse",t:"wealth"},{w:"l'immigration",t:"immigration"},{w:"l'intégration",t:"integration"}
+  ],
+  health: [
+    {w:"la santé",t:"health"},{w:"la maladie",t:"illness"},{w:"le médicament",t:"medicine"},
+    {w:"l'hôpital",t:"hospital"},{w:"le médecin",t:"doctor"},{w:"l'ordonnance",t:"prescription"},
+    {w:"la douleur",t:"pain"},{w:"la fièvre",t:"fever"},{w:"la toux",t:"cough"},
+    {w:"opérer",t:"to operate"},{w:"guérir",t:"to heal/cure"},{w:"se blesser",t:"to injure oneself"},
+    {w:"l'allergie",t:"allergy"},{w:"le vaccin",t:"vaccine"},{w:"la chirurgie",t:"surgery"}
+  ],
+  culture: [
+    {w:"l'art",t:"art"},{w:"la peinture",t:"painting"},{w:"la sculpture",t:"sculpture"},
+    {w:"la musique",t:"music"},{w:"le cinéma",t:"cinema"},{w:"la littérature",t:"literature"},
+    {w:"le roman",t:"novel"},{w:"le théâtre",t:"theater"},{w:"l'exposition",t:"exhibition"},
+    {w:"le musée",t:"museum"},{w:"le chef-d'œuvre",t:"masterpiece"},{w:"l'artiste",t:"artist"},
+    {w:"l'écrivain",t:"writer"},{w:"jouer",t:"to play"},{w:"créer",t:"to create"}
+  ],
+  env: [
+    {w:"l'environnement",t:"environment"},{w:"la nature",t:"nature"},{w:"le climat",t:"climate"},
+    {w:"le réchauffement",t:"warming"},{w:"la pollution",t:"pollution"},{w:"le recyclage",t:"recycling"},
+    {w:"les énergies renouvelables",t:"renewable energy"},{w:"la forêt",t:"forest"},
+    {w:"l'océan",t:"ocean"},{w:"la biodiversité",t:"biodiversity"},{w:"protéger",t:"to protect"},
+    {w:"durable",t:"sustainable"},{w:"les déchets",t:"waste/garbage"},{w:"l'empreinte carbone",t:"carbon footprint"}
+  ],
+  arg: [
+    {w:"selon moi",t:"in my opinion"},{w:"d'une part",t:"on one hand"},{w:"d'autre part",t:"on the other hand"},
+    {w:"cependant",t:"however"},{w:"néanmoins",t:"nevertheless"},{w:"en revanche",t:"on the other hand"},
+    {w:"en effet",t:"indeed"},{w:"or",t:"now/yet (logical)"},{w:"ainsi",t:"thus/so"},
+    {w:"par conséquent",t:"consequently"},{w:"en outre",t:"furthermore"},{w:"de surcroît",t:"moreover"},
+    {w:"il convient de",t:"it is appropriate to"},{w:"force est de constater",t:"one must note"},
+    {w:"à cet égard",t:"in this regard"}
+  ],
+  econ: [
+    {w:"l'économie",t:"economy"},{w:"la croissance",t:"growth"},{w:"la récession",t:"recession"},
+    {w:"l'inflation",t:"inflation"},{w:"le chômage",t:"unemployment"},{w:"le PIB",t:"GDP"},
+    {w:"la bourse",t:"stock market"},{w:"investir",t:"to invest"},{w:"le budget",t:"budget"},
+    {w:"la dette",t:"debt"},{w:"le profit",t:"profit"},{w:"la perte",t:"loss"},
+    {w:"l'actionnaire",t:"shareholder"},{w:"fusionner",t:"to merge"},{w:"la startup",t:"startup"}
+  ],
+  abstract: [
+    {w:"la conscience",t:"consciousness/awareness"},{w:"l'identité",t:"identity"},
+    {w:"la valeur",t:"value"},{w:"le sens",t:"meaning/sense"},{w:"l'ambiguïté",t:"ambiguity"},
+    {w:"la nuance",t:"nuance"},{w:"l'enjeu",t:"stake/issue"},{w:"la rupture",t:"break/rupture"},
+    {w:"l'émergence",t:"emergence"},{w:"la résilience",t:"resilience"},
+    {w:"l'paradigme",t:"paradigm"},{w:"l'implication",t:"implication"},
+    {w:"la complexité",t:"complexity"},{w:"la légitimité",t:"legitimacy"}
+  ]
+};
+
+// VERB DATABASE
+const VERBS = {
+  "parler": {
+    meaning: "to speak/talk", group: "-ER", aux: "avoir",
+    pp: "parlé",
+    present: ["parle","parles","parle","parlons","parlez","parlent"],
+    imparfait: ["parlais","parlais","parlait","parlions","parliez","parlaient"],
+    futur: ["parlerai","parleras","parlera","parlerons","parlerez","parleront"],
+    conditionnel: ["parlerais","parlerais","parlerait","parlerions","parleriez","parleraient"],
+    subjonctif: ["parle","parles","parle","parlions","parliez","parlent"],
+    pqp: ["avais parlé","avais parlé","avait parlé","avions parlé","aviez parlé","avaient parlé"],
+    cond_passe: ["aurais parlé","aurais parlé","aurait parlé","aurions parlé","auriez parlé","auraient parlé"]
+  },
+  "être": {
+    meaning: "to be", group: "irregular", aux: "avoir/être",
+    pp: "été",
+    present: ["suis","es","est","sommes","êtes","sont"],
+    imparfait: ["étais","étais","était","étions","étiez","étaient"],
+    futur: ["serai","seras","sera","serons","serez","seront"],
+    conditionnel: ["serais","serais","serait","serions","seriez","seraient"],
+    subjonctif: ["sois","sois","soit","soyons","soyez","soient"],
+    pqp: ["avais été","avais été","avait été","avions été","aviez été","avaient été"],
+    cond_passe: ["aurais été","aurais été","aurait été","aurions été","auriez été","auraient été"]
+  },
+  "avoir": {
+    meaning: "to have", group: "irregular", aux: "avoir",
+    pp: "eu",
+    present: ["ai","as","a","avons","avez","ont"],
+    imparfait: ["avais","avais","avait","avions","aviez","avaient"],
+    futur: ["aurai","auras","aura","aurons","aurez","auront"],
+    conditionnel: ["aurais","aurais","aurait","aurions","auriez","auraient"],
+    subjonctif: ["aie","aies","ait","ayons","ayez","aient"],
+    pqp: ["avais eu","avais eu","avait eu","avions eu","aviez eu","avaient eu"],
+    cond_passe: ["aurais eu","aurais eu","aurait eu","aurions eu","auriez eu","auraient eu"]
+  },
+  "aller": {
+    meaning: "to go", group: "irregular", aux: "être",
+    pp: "allé",
+    present: ["vais","vas","va","allons","allez","vont"],
+    imparfait: ["allais","allais","allait","allions","alliez","allaient"],
+    futur: ["irai","iras","ira","irons","irez","iront"],
+    conditionnel: ["irais","irais","irait","irions","iriez","iraient"],
+    subjonctif: ["aille","ailles","aille","allions","alliez","aillent"],
+    pqp: ["étais allé","étais allé","était allé","étions allés","étiez allés","étaient allés"],
+    cond_passe: ["serais allé","serais allé","serait allé","serions allés","seriez allés","seraient allés"]
+  },
+  "faire": {
+    meaning: "to do/make", group: "irregular", aux: "avoir",
+    pp: "fait",
+    present: ["fais","fais","fait","faisons","faites","font"],
+    imparfait: ["faisais","faisais","faisait","faisions","faisiez","faisaient"],
+    futur: ["ferai","feras","fera","ferons","ferez","feront"],
+    conditionnel: ["ferais","ferais","ferait","ferions","feriez","feraient"],
+    subjonctif: ["fasse","fasses","fasse","fassions","fassiez","fassent"],
+    pqp: ["avais fait","avais fait","avait fait","avions fait","aviez fait","avaient fait"],
+    cond_passe: ["aurais fait","aurais fait","aurait fait","aurions fait","auriez fait","auraient fait"]
+  },
+  "pouvoir": {
+    meaning: "to be able to / can", group: "irregular", aux: "avoir",
+    pp: "pu",
+    present: ["peux","peux","peut","pouvons","pouvez","peuvent"],
+    imparfait: ["pouvais","pouvais","pouvait","pouvions","pouviez","pouvaient"],
+    futur: ["pourrai","pourras","pourra","pourrons","pourrez","pourront"],
+    conditionnel: ["pourrais","pourrais","pourrait","pourrions","pourriez","pourraient"],
+    subjonctif: ["puisse","puisses","puisse","puissions","puissiez","puissent"],
+    pqp: ["avais pu","avais pu","avait pu","avions pu","aviez pu","avaient pu"],
+    cond_passe: ["aurais pu","aurais pu","aurait pu","aurions pu","auriez pu","auraient pu"]
+  },
+  "vouloir": {
+    meaning: "to want", group: "irregular", aux: "avoir",
+    pp: "voulu",
+    present: ["veux","veux","veut","voulons","voulez","veulent"],
+    imparfait: ["voulais","voulais","voulait","voulions","vouliez","voulaient"],
+    futur: ["voudrai","voudras","voudra","voudrons","voudrez","voudront"],
+    conditionnel: ["voudrais","voudrais","voudrait","voudrions","voudriez","voudraient"],
+    subjonctif: ["veuille","veuilles","veuille","voulions","vouliez","veuillent"],
+    pqp: ["avais voulu","avais voulu","avait voulu","avions voulu","aviez voulu","avaient voulu"],
+    cond_passe: ["aurais voulu","aurais voulu","aurait voulu","aurions voulu","auriez voulu","auraient voulu"]
+  },
+  "savoir": {
+    meaning: "to know (facts)", group: "irregular", aux: "avoir",
+    pp: "su",
+    present: ["sais","sais","sait","savons","savez","savent"],
+    imparfait: ["savais","savais","savait","savions","saviez","savaient"],
+    futur: ["saurai","sauras","saura","saurons","saurez","sauront"],
+    conditionnel: ["saurais","saurais","saurait","saurions","sauriez","sauraient"],
+    subjonctif: ["sache","saches","sache","sachions","sachiez","sachent"],
+    pqp: ["avais su","avais su","avait su","avions su","aviez su","avaient su"],
+    cond_passe: ["aurais su","aurais su","aurait su","aurions su","auriez su","auraient su"]
+  },
+  "venir": {
+    meaning: "to come", group: "irregular", aux: "être",
+    pp: "venu",
+    present: ["viens","viens","vient","venons","venez","viennent"],
+    imparfait: ["venais","venais","venait","venions","veniez","venaient"],
+    futur: ["viendrai","viendras","viendra","viendrons","viendrez","viendront"],
+    conditionnel: ["viendrais","viendrais","viendrait","viendrions","viendriez","viendraient"],
+    subjonctif: ["vienne","viennes","vienne","venions","veniez","viennent"],
+    pqp: ["étais venu","étais venu","était venu","étions venus","étiez venus","étaient venus"],
+    cond_passe: ["serais venu","serais venu","serait venu","serions venus","seriez venus","seraient venus"]
+  },
+  "prendre": {
+    meaning: "to take", group: "irregular", aux: "avoir",
+    pp: "pris",
+    present: ["prends","prends","prend","prenons","prenez","prennent"],
+    imparfait: ["prenais","prenais","prenait","prenions","preniez","prenaient"],
+    futur: ["prendrai","prendras","prendra","prendrons","prendrez","prendront"],
+    conditionnel: ["prendrais","prendrais","prendrait","prendrions","prendriez","prendraient"],
+    subjonctif: ["prenne","prennes","prenne","prenions","preniez","prennent"],
+    pqp: ["avais pris","avais pris","avait pris","avions pris","aviez pris","avaient pris"],
+    cond_passe: ["aurais pris","aurais pris","aurait pris","aurions pris","auriez pris","auraient pris"]
+  },
+  "voir": {
+    meaning: "to see", group: "irregular", aux: "avoir",
+    pp: "vu",
+    present: ["vois","vois","voit","voyons","voyez","voient"],
+    imparfait: ["voyais","voyais","voyait","voyions","voyiez","voyaient"],
+    futur: ["verrai","verras","verra","verrons","verrez","verront"],
+    conditionnel: ["verrais","verrais","verrait","verrions","verriez","verraient"],
+    subjonctif: ["voie","voies","voie","voyions","voyiez","voient"],
+    pqp: ["avais vu","avais vu","avait vu","avions vu","aviez vu","avaient vu"],
+    cond_passe: ["aurais vu","aurais vu","aurait vu","aurions vu","auriez vu","auraient vu"]
+  },
+  "donner": {
+    meaning: "to give", group: "-ER", aux: "avoir",
+    pp: "donné",
+    present: ["donne","donnes","donne","donnons","donnez","donnent"],
+    imparfait: ["donnais","donnais","donnait","donnions","donniez","donnaient"],
+    futur: ["donnerai","donneras","donnera","donnerons","donnerez","donneront"],
+    conditionnel: ["donnerais","donnerais","donnerait","donnerions","donneriez","donneraient"],
+    subjonctif: ["donne","donnes","donne","donnions","donniez","donnent"],
+    pqp: ["avais donné","avais donné","avait donné","avions donné","aviez donné","avaient donné"],
+    cond_passe: ["aurais donné","aurais donné","aurait donné","aurions donné","auriez donné","auraient donné"]
+  },
+  "manger": {
+    meaning: "to eat", group: "-ER", aux: "avoir",
+    pp: "mangé",
+    present: ["mange","manges","mange","mangeons","mangez","mangent"],
+    imparfait: ["mangeais","mangeais","mangeait","mangions","mangiez","mangeaient"],
+    futur: ["mangerai","mangeras","mangera","mangerons","mangerez","mangeront"],
+    conditionnel: ["mangerais","mangerais","mangerait","mangerions","mangeriez","mangeraient"],
+    subjonctif: ["mange","manges","mange","mangions","mangiez","mangent"],
+    pqp: ["avais mangé","avais mangé","avait mangé","avions mangé","aviez mangé","avaient mangé"],
+    cond_passe: ["aurais mangé","aurais mangé","aurait mangé","aurions mangé","auriez mangé","auraient mangé"]
+  },
+  "finir": {
+    meaning: "to finish", group: "-IR", aux: "avoir",
+    pp: "fini",
+    present: ["finis","finis","finit","finissons","finissez","finissent"],
+    imparfait: ["finissais","finissais","finissait","finissions","finissiez","finissaient"],
+    futur: ["finirai","finiras","finira","finirons","finirez","finiront"],
+    conditionnel: ["finirais","finirais","finirait","finirions","finiriez","finiraient"],
+    subjonctif: ["finisse","finisses","finisse","finissions","finissiez","finissent"],
+    pqp: ["avais fini","avais fini","avait fini","avions fini","aviez fini","avaient fini"],
+    cond_passe: ["aurais fini","aurais fini","aurait fini","aurions fini","auriez fini","auraient fini"]
+  },
+  "partir": {
+    meaning: "to leave/depart", group: "irregular", aux: "être",
+    pp: "parti",
+    present: ["pars","pars","part","partons","partez","partent"],
+    imparfait: ["partais","partais","partait","partions","partiez","partaient"],
+    futur: ["partirai","partiras","partira","partirons","partirez","partiront"],
+    conditionnel: ["partirais","partirais","partirait","partirions","partiriez","partiraient"],
+    subjonctif: ["parte","partes","parte","partions","partiez","partent"],
+    pqp: ["étais parti","étais parti","était parti","étions partis","étiez partis","étaient partis"],
+    cond_passe: ["serais parti","serais parti","serait parti","serions partis","seriez partis","seraient partis"]
+  },
+  "devoir": {
+    meaning: "to have to / must", group: "irregular", aux: "avoir",
+    pp: "dû",
+    present: ["dois","dois","doit","devons","devez","doivent"],
+    imparfait: ["devais","devais","devait","devions","deviez","devaient"],
+    futur: ["devrai","devras","devra","devrons","devrez","devront"],
+    conditionnel: ["devrais","devrais","devrait","devrions","devriez","devraient"],
+    subjonctif: ["doive","doives","doive","devions","deviez","doivent"],
+    pqp: ["avais dû","avais dû","avait dû","avions dû","aviez dû","avaient dû"],
+    cond_passe: ["aurais dû","aurais dû","aurait dû","aurions dû","auriez dû","auraient dû"]
+  },
+  "mettre": {
+    meaning: "to put / put on", group: "irregular", aux: "avoir",
+    pp: "mis",
+    present: ["mets","mets","met","mettons","mettez","mettent"],
+    imparfait: ["mettais","mettais","mettait","mettions","mettiez","mettaient"],
+    futur: ["mettrai","mettras","mettra","mettrons","mettrez","mettront"],
+    conditionnel: ["mettrais","mettrais","mettrait","mettrions","mettriez","mettraient"],
+    subjonctif: ["mette","mettes","mette","mettions","mettiez","mettent"],
+    pqp: ["avais mis","avais mis","avait mis","avions mis","aviez mis","avaient mis"],
+    cond_passe: ["aurais mis","aurais mis","aurait mis","aurions mis","auriez mis","auraient mis"]
+  },
+  "dire": {
+    meaning: "to say/tell", group: "irregular", aux: "avoir",
+    pp: "dit",
+    present: ["dis","dis","dit","disons","dites","disent"],
+    imparfait: ["disais","disais","disait","disions","disiez","disaient"],
+    futur: ["dirai","diras","dira","dirons","direz","diront"],
+    conditionnel: ["dirais","dirais","dirait","dirions","diriez","diraient"],
+    subjonctif: ["dise","dises","dise","disions","disiez","disent"],
+    pqp: ["avais dit","avais dit","avait dit","avions dit","aviez dit","avaient dit"],
+    cond_passe: ["aurais dit","aurais dit","aurait dit","aurions dit","auriez dit","auraient dit"]
+  },
+  "lire": {
+    meaning: "to read", group: "irregular", aux: "avoir",
+    pp: "lu",
+    present: ["lis","lis","lit","lisons","lisez","lisent"],
+    imparfait: ["lisais","lisais","lisait","lisions","lisiez","lisaient"],
+    futur: ["lirai","liras","lira","lirons","lirez","liront"],
+    conditionnel: ["lirais","lirais","lirait","lirions","liriez","liraient"],
+    subjonctif: ["lise","lises","lise","lisions","lisiez","lisent"],
+    pqp: ["avais lu","avais lu","avait lu","avions lu","aviez lu","avaient lu"],
+    cond_passe: ["aurais lu","aurais lu","aurait lu","aurions lu","auriez lu","auraient lu"]
+  },
+  "écrire": {
+    meaning: "to write", group: "irregular", aux: "avoir",
+    pp: "écrit",
+    present: ["écris","écris","écrit","écrivons","écrivez","écrivent"],
+    imparfait: ["écrivais","écrivais","écrivait","écrivions","écriviez","écrivaient"],
+    futur: ["écrirai","écriras","écrira","écrirons","écrirez","écriront"],
+    conditionnel: ["écrirais","écrirais","écrirait","écririons","écririez","écriraient"],
+    subjonctif: ["écrive","écrives","écrive","écrivions","écriviez","écrivent"],
+    pqp: ["avais écrit","avais écrit","avait écrit","avions écrit","aviez écrit","avaient écrit"],
+    cond_passe: ["aurais écrit","aurais écrit","aurait écrit","aurions écrit","auriez écrit","auraient écrit"]
+  },
+  "connaître": {
+    meaning: "to know (people/places)", group: "irregular", aux: "avoir",
+    pp: "connu",
+    present: ["connais","connais","connaît","connaissons","connaissez","connaissent"],
+    imparfait: ["connaissais","connaissais","connaissait","connaissions","connaissiez","connaissaient"],
+    futur: ["connaîtrai","connaîtras","connaîtra","connaîtrons","connaîtrez","connaîtront"],
+    conditionnel: ["connaîtrais","connaîtrais","connaîtrait","connaîtrions","connaîtriez","connaîtraient"],
+    subjonctif: ["connaisse","connaisses","connaisse","connaissions","connaissiez","connaissent"],
+    pqp: ["avais connu","avais connu","avait connu","avions connu","aviez connu","avaient connu"],
+    cond_passe: ["aurais connu","aurais connu","aurait connu","aurions connu","auriez connu","auraient connu"]
+  },
+  "vivre": {
+    meaning: "to live", group: "irregular", aux: "avoir",
+    pp: "vécu",
+    present: ["vis","vis","vit","vivons","vivez","vivent"],
+    imparfait: ["vivais","vivais","vivait","vivions","viviez","vivaient"],
+    futur: ["vivrai","vivras","vivra","vivrons","vivrez","vivront"],
+    conditionnel: ["vivrais","vivrais","vivrait","vivrions","vivriez","vivraient"],
+    subjonctif: ["vive","vives","vive","vivions","viviez","vivent"],
+    pqp: ["avais vécu","avais vécu","avait vécu","avions vécu","aviez vécu","avaient vécu"],
+    cond_passe: ["aurais vécu","aurais vécu","aurait vécu","aurions vécu","auriez vécu","auraient vécu"]
+  },
+  "croire": {
+    meaning: "to believe", group: "irregular", aux: "avoir",
+    pp: "cru",
+    present: ["crois","crois","croit","croyons","croyez","croient"],
+    imparfait: ["croyais","croyais","croyait","croyions","croyiez","croyaient"],
+    futur: ["croirai","croiras","croira","croirons","croirez","croiront"],
+    conditionnel: ["croirais","croirais","croirait","croirions","croiriez","croiraient"],
+    subjonctif: ["croie","croies","croie","croyions","croyiez","croient"],
+    pqp: ["avais cru","avais cru","avait cru","avions cru","aviez cru","avaient cru"],
+    cond_passe: ["aurais cru","aurais cru","aurait cru","aurions cru","auriez cru","auraient cru"]
+  },
+  "tenir": {
+    meaning: "to hold/keep", group: "irregular", aux: "avoir",
+    pp: "tenu",
+    present: ["tiens","tiens","tient","tenons","tenez","tiennent"],
+    imparfait: ["tenais","tenais","tenait","tenions","teniez","tenaient"],
+    futur: ["tiendrai","tiendras","tiendra","tiendrons","tiendrez","tiendront"],
+    conditionnel: ["tiendrais","tiendrais","tiendrait","tiendrions","tiendriez","tiendraient"],
+    subjonctif: ["tienne","tiennes","tienne","tenions","teniez","tiennent"],
+    pqp: ["avais tenu","avais tenu","avait tenu","avions tenu","aviez tenu","avaient tenu"],
+    cond_passe: ["aurais tenu","aurais tenu","aurait tenu","aurions tenu","auriez tenu","auraient tenu"]
+  },
+  "recevoir": {
+    meaning: "to receive", group: "irregular", aux: "avoir",
+    pp: "reçu",
+    present: ["reçois","reçois","reçoit","recevons","recevez","reçoivent"],
+    imparfait: ["recevais","recevais","recevait","recevions","receviez","recevaient"],
+    futur: ["recevrai","recevras","recevra","recevrons","recevrez","recevront"],
+    conditionnel: ["recevrais","recevrais","recevrait","recevrions","recevriez","recevraient"],
+    subjonctif: ["reçoive","reçoives","reçoive","recevions","receviez","reçoivent"],
+    pqp: ["avais reçu","avais reçu","avait reçu","avions reçu","aviez reçu","avaient reçu"],
+    cond_passe: ["aurais reçu","aurais reçu","aurait reçu","aurions reçu","auriez reçu","auraient reçu"]
+  },
+  "sortir": {
+    meaning: "to go out/leave", group: "irregular", aux: "être",
+    pp: "sorti",
+    present: ["sors","sors","sort","sortons","sortez","sortent"],
+    imparfait: ["sortais","sortais","sortait","sortions","sortiez","sortaient"],
+    futur: ["sortirai","sortiras","sortira","sortirons","sortirez","sortiront"],
+    conditionnel: ["sortirais","sortirais","sortirait","sortirions","sortiriez","sortiraient"],
+    subjonctif: ["sorte","sortes","sorte","sortions","sortiez","sortent"],
+    pqp: ["étais sorti","étais sorti","était sorti","étions sortis","étiez sortis","étaient sortis"],
+    cond_passe: ["serais sorti","serais sorti","serait sorti","serions sortis","seriez sortis","seraient sortis"]
+  },
+  "sentir": {
+    meaning: "to feel / to smell", group: "irregular", aux: "avoir",
+    pp: "senti",
+    present: ["sens","sens","sent","sentons","sentez","sentent"],
+    imparfait: ["sentais","sentais","sentait","sentions","sentiez","sentaient"],
+    futur: ["sentirai","sentiras","sentira","sentirons","sentirez","sentiront"],
+    conditionnel: ["sentirais","sentirais","sentirait","sentirions","sentiriez","sentiraient"],
+    subjonctif: ["sente","sentes","sente","sentions","sentiez","sentent"],
+    pqp: ["avais senti","avais senti","avait senti","avions senti","aviez senti","avaient senti"],
+    cond_passe: ["aurais senti","aurais senti","aurait senti","aurions senti","auriez senti","auraient senti"]
+  }
+};
+
+const PRONOUNS = ["je/j'","tu","il/elle/on","nous","vous","ils/elles"];
+
+const TENSE_NAMES = {
+  present: "Présent",
+  passe_compose: "Passé Composé",
+  imparfait: "Imparfait",
+  futur_simple: "Futur Simple",
+  conditionnel: "Conditionnel Présent",
+  subjonctif: "Subjonctif Présent",
+  plus_que_parfait: "Plus-que-parfait",
+  cond_passe: "Conditionnel Passé"
+};
+
+// I18N
+const I18N = {
+  en: { hero_tag:"Complete French Course — A1 to B2", quiz_sub:"Test your French knowledge", nav_home:"Navigation", nav_overview:"Overview", nav_basics:"Basics & Alphabet", nav_grammar:"Grammar", nav_vocab:"Vocabulary", nav_verbs_label:"Verbs", nav_verbs:"All Tenses & Verbs", nav_tenses:"Tense Guide", nav_reading_label:"Reading", nav_reading:"Reading", nav_practice_label:"Practice", nav_quiz:"Quiz", nav_fill:"Fill in Blanks", stat_levels:"Levels A1–B2", stat_verbs:"Verbs Conjugated", stat_tenses:"Tenses Covered", stat_quiz:"Quiz Questions", cta_start:"Start A1 →", course_map:"Course Map", sec_alphabet:"The French Alphabet" },
+  es: { hero_tag:"Curso Completo de Francés — A1 a B2", quiz_sub:"Pon a prueba tu francés", nav_home:"Navegación", nav_overview:"Inicio", nav_basics:"Básicos & Alfabeto", nav_grammar:"Gramática", nav_vocab:"Vocabulario", nav_verbs_label:"Verbos", nav_verbs:"Todos los Tiempos", nav_tenses:"Guía de Tiempos", nav_reading_label:"Lectura", nav_reading:"Lectura", nav_practice_label:"Práctica", nav_quiz:"Cuestionario", nav_fill:"Rellena los Huecos", stat_levels:"Niveles A1–B2", stat_verbs:"Verbos Conjugados", stat_tenses:"Tiempos Cubiertos", stat_quiz:"Preguntas de Quiz", cta_start:"Empezar A1 →", course_map:"Mapa del Curso", sec_alphabet:"El Alfabeto Francés" },
+  fr: { hero_tag:"Cours Complet de Français — A1 à B2", quiz_sub:"Testez votre français", nav_home:"Navigation", nav_overview:"Accueil", nav_basics:"Bases & Alphabet", nav_grammar:"Grammaire", nav_vocab:"Vocabulaire", nav_verbs_label:"Verbes", nav_verbs:"Tous les Temps", nav_tenses:"Guide des Temps", nav_reading_label:"Lecture", nav_reading:"Lecture", nav_practice_label:"Pratique", nav_quiz:"Quiz", nav_fill:"Textes à Trous", stat_levels:"Niveaux A1–B2", stat_verbs:"Verbes Conjugués", stat_tenses:"Temps Couverts", stat_quiz:"Questions de Quiz", cta_start:"Commencer A1 →", course_map:"Plan du Cours", sec_alphabet:"L'Alphabet Français" },
+  de: { hero_tag:"Vollständiger Französischkurs — A1 bis B2", quiz_sub:"Teste dein Französisch", nav_home:"Navigation", nav_overview:"Übersicht", nav_basics:"Grundlagen & Alphabet", nav_grammar:"Grammatik", nav_vocab:"Vokabular", nav_verbs_label:"Verben", nav_verbs:"Alle Zeiten & Verben", nav_tenses:"Zeitenführer", nav_reading_label:"Lesen", nav_reading:"Lesen", nav_practice_label:"Übung", nav_quiz:"Quiz", nav_fill:"Lückentext", stat_levels:"Niveaus A1–B2", stat_verbs:"Konjugierte Verben", stat_tenses:"Behandelte Zeiten", stat_quiz:"Quizfragen", cta_start:"A1 Starten →", course_map:"Kursübersicht", sec_alphabet:"Das Französische Alphabet" },
+  ar: { hero_tag:"دورة الفرنسية الكاملة — من A1 إلى B2", quiz_sub:"اختبر معرفتك بالفرنسية", nav_home:"التنقل", nav_overview:"الرئيسية", nav_basics:"الأساسيات والأبجدية", nav_grammar:"القواعد", nav_vocab:"المفردات", nav_verbs_label:"الأفعال", nav_verbs:"جميع الأزمنة", nav_tenses:"دليل الأزمنة", nav_reading_label:"القراءة", nav_reading:"القراءة", nav_practice_label:"التدريب", nav_quiz:"اختبار", nav_fill:"املأ الفراغات", stat_levels:"المستويات A1-B2", stat_verbs:"فعل مصرف", stat_tenses:"الأزمنة المغطاة", stat_quiz:"أسئلة الاختبار", cta_start:"ابدأ A1 ←", course_map:"خريطة الدورة", sec_alphabet:"الأبجدية الفرنسية" },
+  pt: { hero_tag:"Curso Completo de Francês — A1 ao B2", quiz_sub:"Teste seu francês", nav_home:"Navegação", nav_overview:"Início", nav_basics:"Básicos e Alfabeto", nav_grammar:"Gramática", nav_vocab:"Vocabulário", nav_verbs_label:"Verbos", nav_verbs:"Todos os Tempos", nav_tenses:"Guia de Tempos", nav_reading_label:"Leitura", nav_reading:"Leitura", nav_practice_label:"Prática", nav_quiz:"Quiz", nav_fill:"Preencha os Espaços", stat_levels:"Níveis A1–B2", stat_verbs:"Verbos Conjugados", stat_tenses:"Tempos Cobertos", stat_quiz:"Perguntas do Quiz", cta_start:"Começar A1 →", course_map:"Mapa do Curso", sec_alphabet:"O Alfabeto Francês" },
+  zh: { hero_tag:"完整法语课程 — A1至B2", quiz_sub:"测试你的法语水平", nav_home:"导航", nav_overview:"首页", nav_basics:"基础与字母", nav_grammar:"语法", nav_vocab:"词汇", nav_verbs_label:"动词", nav_verbs:"所有时态和动词", nav_tenses:"时态指南", nav_reading_label:"阅读", nav_reading:"阅读", nav_practice_label:"练习", nav_quiz:"测验", nav_fill:"填空", stat_levels:"A1–B2级别", stat_verbs:"已变位动词", stat_tenses:"涵盖时态", stat_quiz:"测验题", cta_start:"开始A1 →", course_map:"课程地图", sec_alphabet:"法语字母表" },
+  ru: { hero_tag:"Полный курс французского — A1 до B2", quiz_sub:"Проверьте свой французский", nav_home:"Навигация", nav_overview:"Главная", nav_basics:"Основы и Алфавит", nav_grammar:"Грамматика", nav_vocab:"Словарь", nav_verbs_label:"Глаголы", nav_verbs:"Все Времена и Глаголы", nav_tenses:"Руководство по Временам", nav_reading_label:"Чтение", nav_reading:"Чтение", nav_practice_label:"Практика", nav_quiz:"Тест", nav_fill:"Заполни Пропуски", stat_levels:"Уровни A1–B2", stat_verbs:"Спряжённых Глаголов", stat_tenses:"Охваченных Времён", stat_quiz:"Вопросов Теста", cta_start:"Начать A1 →", course_map:"Карта Курса", sec_alphabet:"Французский Алфавит" },
+  it: { hero_tag:"Corso Completo di Francese — A1 a B2", quiz_sub:"Testa il tuo francese", nav_home:"Navigazione", nav_overview:"Panoramica", nav_basics:"Basi e Alfabeto", nav_grammar:"Grammatica", nav_vocab:"Vocabolario", nav_verbs_label:"Verbi", nav_verbs:"Tutti i Tempi", nav_tenses:"Guida ai Tempi", nav_reading_label:"Lettura", nav_reading:"Lettura", nav_practice_label:"Pratica", nav_quiz:"Quiz", nav_fill:"Completa le Frasi", stat_levels:"Livelli A1–B2", stat_verbs:"Verbi Coniugati", stat_tenses:"Tempi Trattati", stat_quiz:"Domande Quiz", cta_start:"Inizia A1 →", course_map:"Mappa del Corso", sec_alphabet:"L'Alfabeto Francese" },
+  tr: { hero_tag:"Eksiksiz Fransızca Kursu — A1'den B2'ye", quiz_sub:"Fransızcana test et", nav_home:"Gezinti", nav_overview:"Genel Bakış", nav_basics:"Temel & Alfabe", nav_grammar:"Dilbilgisi", nav_vocab:"Kelime Hazinesi", nav_verbs_label:"Fiiller", nav_verbs:"Tüm Zamanlar & Fiiller", nav_tenses:"Zaman Rehberi", nav_reading_label:"Okuma", nav_reading:"Okuma", nav_practice_label:"Pratik", nav_quiz:"Test", nav_fill:"Boşluk Doldur", stat_levels:"A1–B2 Seviyeleri", stat_verbs:"Çekimlenen Fiil", stat_tenses:"Ele Alınan Zamanlar", stat_quiz:"Test Sorusu", cta_start:"A1'e Başla →", course_map:"Kurs Haritası", sec_alphabet:"Fransız Alfabesi" },
+  ja: { hero_tag:"完全フランス語コース — A1からB2", quiz_sub:"フランス語をテストしよう", nav_home:"ナビゲーション", nav_overview:"概要", nav_basics:"基礎とアルファベット", nav_grammar:"文法", nav_vocab:"語彙", nav_verbs_label:"動詞", nav_verbs:"すべての時制と動詞", nav_tenses:"時制ガイド", nav_reading_label:"読解", nav_reading:"読解", nav_practice_label:"練習", nav_quiz:"クイズ", nav_fill:"穴埋め", stat_levels:"A1–B2レベル", stat_verbs:"活用済み動詞", stat_tenses:"カバー時制", stat_quiz:"問題数", cta_start:"A1を開始 →", course_map:"コースマップ", sec_alphabet:"フランス語アルファベット" },
+  ko: { hero_tag:"완전한 프랑스어 과정 — A1에서 B2까지", quiz_sub:"프랑스어 실력을 테스트하세요", nav_home:"탐색", nav_overview:"개요", nav_basics:"기초 & 알파벳", nav_grammar:"문법", nav_vocab:"어휘", nav_verbs_label:"동사", nav_verbs:"모든 시제와 동사", nav_tenses:"시제 가이드", nav_reading_label:"독해", nav_reading:"독해", nav_practice_label:"연습", nav_quiz:"퀴즈", nav_fill:"빈칸 채우기", stat_levels:"A1–B2 레벨", stat_verbs:"활용된 동사", stat_tenses:"다룬 시제", stat_quiz:"퀴즈 문제", cta_start:"A1 시작 →", course_map:"코스 맵", sec_alphabet:"프랑스어 알파벳" }
+};
+
+let currentLang = "en";
+let currentVerbTense = "present";
+let currentVerb = null;
+let quizQuestions = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizType = "vocab";
+let quizLevel = "a1";
+
+// ===================== NAVIGATION =====================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + id);
+  if (pg) pg.classList.add('active');
+  // highlight nav
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+id+"'")) n.classList.add('active');
+  });
+  closeSidebar();
+  window.scrollTo(0,0);
+  if (id === 'a1-vocab') renderVocab();
+  if (id === 'a2-vocab') renderVocabA2();
+  if (id === 'b1-vocab') renderVocabB1();
+  if (id === 'b2-vocab') renderVocabB2();
+  if (id === 'verbs') renderAllVerbs();
+  if (id === 'fill') genFill();
+}
+
+function closeSidebar() {
+  if (window.innerWidth <= 900) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  }
+}
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+});
+document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+// ===================== LANG =====================
+function setLang(lang) {
+  currentLang = lang;
+  const d = I18N[lang] || I18N.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (d[k]) el.textContent = d[k];
+  });
+  // RTL for Arabic
+  document.body.style.direction = lang === 'ar' ? 'rtl' : 'ltr';
+}
+
+// ===================== VOCABULARY =====================
+function makeVocabGrid(items, containerId) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  c.innerHTML = items.map(item => `
+    <div class="vocab-item" onclick="this.classList.toggle('revealed')">
+      <div class="word">${item.w}</div>
+      <div class="translation">${item.t}</div>
+      <div class="hint">Click to reveal</div>
+    </div>
+  `).join('');
+}
+
+function renderVocab() {
+  makeVocabGrid(VOCAB.family, 'vocab-family');
+  makeVocabGrid(VOCAB.food, 'vocab-food');
+  makeVocabGrid(VOCAB.body, 'vocab-body');
+  makeVocabGrid(VOCAB.house, 'vocab-house');
+  makeVocabGrid(VOCAB.adj, 'vocab-adj');
+}
+function renderVocabA2() {
+  makeVocabGrid(VOCAB.work, 'vocab-work');
+  makeVocabGrid(VOCAB.travel, 'vocab-travel');
+  makeVocabGrid(VOCAB.shop, 'vocab-shop');
+  makeVocabGrid(VOCAB.emo, 'vocab-emo');
+}
+function renderVocabB1() {
+  makeVocabGrid(VOCAB.society, 'vocab-society');
+  makeVocabGrid(VOCAB.health, 'vocab-health');
+  makeVocabGrid(VOCAB.culture, 'vocab-culture');
+  makeVocabGrid(VOCAB.env, 'vocab-env');
+}
+function renderVocabB2() {
+  makeVocabGrid(VOCAB.arg, 'vocab-arg');
+  makeVocabGrid(VOCAB.econ, 'vocab-econ');
+  makeVocabGrid(VOCAB.abstract, 'vocab-abstract');
+}
+
+// ===================== VERB CONJUGATOR =====================
+function getConjugationForTense(verb, tense) {
+  const v = VERBS[verb.toLowerCase()];
+  if (!v) return null;
+  const map = {
+    present: v.present, imparfait: v.imparfait, futur_simple: v.futur,
+    conditionnel: v.conditionnel, subjonctif: v.subjonctif,
+    plus_que_parfait: v.pqp, cond_passe: v.cond_passe,
+    passe_compose: v.present.map((_,i) => {
+      const aux = v.aux === 'être' ? ['suis','es','est','sommes','êtes','sont'][i] : ['ai','as','a','avons','avez','ont'][i];
+      return aux + ' ' + v.pp;
+    })
+  };
+  return map[tense] || null;
+}
+
+function renderVerbTable(verbName, tense) {
+  const v = VERBS[verbName];
+  if (!v) return;
+  const forms = getConjugationForTense(verbName, tense);
+  if (!forms) return;
+  const prefix = tense === 'subjonctif' ? 'que ' : '';
+  let html = `
+    <div class="card">
+      <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+        <h2 style="font-family:var(--font-display);font-size:28px;color:var(--accent)">${verbName}</h2>
+        <span style="color:var(--muted);font-size:15px">${v.meaning}</span>
+        <span style="color:var(--muted);font-size:13px;margin-left:auto">Group: ${v.group} | Aux: ${v.aux} | PP: ${v.pp}</span>
+      </div>
+      <div style="font-size:13px;color:var(--accent);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">${TENSE_NAMES[tense]}</div>
+      <div class="table-wrap">
+        <table class="conj-table">
+          <tr><th>Pronoun</th><th>Form</th></tr>
+          ${PRONOUNS.map((p,i) => `<tr><td class="pronoun">${p}</td><td class="fr">${prefix}${forms[i]}</td></tr>`).join('')}
+        </table>
+      </div>
+    </div>`;
+  document.getElementById('verb-result').innerHTML = html;
+}
+
+function searchVerb(val) {
+  const name = val.trim().toLowerCase();
+  if (VERBS[name]) {
+    currentVerb = name;
+    renderVerbTable(name, currentVerbTense);
+  } else if (name.length > 1) {
+    // try to find similar
+    const keys = Object.keys(VERBS).filter(k => k.startsWith(name));
+    if (keys.length > 0) {
+      document.getElementById('verb-result').innerHTML = `<div class="card"><p style="color:var(--muted)">Did you mean: ${keys.map(k=>`<span onclick="document.getElementById('verbInput').value='${k}';searchVerb('${k}')" style="color:var(--accent);cursor:pointer;margin-right:12px">${k}</span>`).join('')}</p></div>`;
+    } else {
+      document.getElementById('verb-result').innerHTML = `<div class="card"><p style="color:var(--muted)">Verb not found. Available: ${Object.keys(VERBS).join(', ')}</p></div>`;
+    }
+  }
+}
+
+function switchVerbTense(tense, btn) {
+  currentVerbTense = tense;
+  document.querySelectorAll('#verbTabs .tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (currentVerb) renderVerbTable(currentVerb, tense);
+}
+
+function renderAllVerbs() {
+  const c = document.getElementById('all-verbs-list');
+  if (!c) return;
+  const tenses = ['present','imparfait','futur_simple','conditionnel','passe_compose'];
+  c.innerHTML = Object.entries(VERBS).map(([name, v]) => {
+    const rows = PRONOUNS.map((p,i) => `
+      <tr>
+        <td class="pronoun" style="width:100px">${p}</td>
+        ${tenses.map(t => {
+          const forms = getConjugationForTense(name, t);
+          return `<td class="fr" style="font-size:13px">${forms ? forms[i] : '—'}</td>`;
+        }).join('')}
+      </tr>
+    `).join('');
+    return `
+      <div class="card" style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+          <h3 style="font-family:var(--font-display);font-size:20px;color:var(--accent)">${name}</h3>
+          <span style="color:var(--muted)">${v.meaning}</span>
+          <span style="margin-left:auto;font-size:12px;color:var(--muted)">Group: ${v.group} | Aux: ${v.aux} | PP: ${v.pp}</span>
+        </div>
+        <div class="table-wrap">
+          <table class="conj-table">
+            <tr><th>Pronoun</th>${tenses.map(t=>`<th>${TENSE_NAMES[t]}</th>`).join('')}</tr>
+            ${rows}
+          </table>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ===================== QUIZ ENGINE =====================
+const QUIZ_BANK = {
+  vocab: [
+    {q:"What does 'la maison' mean?",opts:["The car","The house","The dog","The book"],a:1,level:"a1"},
+    {q:"What does 'manger' mean?",opts:["To sleep","To speak","To eat","To run"],a:2,level:"a1"},
+    {q:"What is 'le livre'?",opts:["The pen","The table","The book","The chair"],a:2,level:"a1"},
+    {q:"Translate: 'triste'",opts:["Happy","Angry","Sad","Surprised"],a:2,level:"a1"},
+    {q:"What does 'le médecin' mean?",opts:["Mechanic","Doctor","Teacher","Lawyer"],a:1,level:"a2"},
+    {q:"What is 'voyager'?",opts:["To work","To travel","To eat","To sleep"],a:1,level:"a2"},
+    {q:"Translate: 'la liberté'",opts:["Law","Freedom","Equality","Justice"],a:1,level:"b1"},
+    {q:"What does 'nuire' mean?",opts:["To help","To harm","To grow","To believe"],a:1,level:"b1"},
+    {q:"Translate: 'la nuance'",opts:["Announcement","Nuance","Speed","Courage"],a:1,level:"b2"},
+    {q:"What is 'l'enjeu'?",opts:["The entrance","The game","The stake/issue","The enemy"],a:2,level:"b2"},
+    {q:"What does 'beau/belle' mean?",opts:["Ugly","Old","Beautiful","Clever"],a:2,level:"a1"},
+    {q:"What is 'le travail'?",opts:["Travel","Work","Train","Table"],a:1,level:"a1"},
+    {q:"Translate: 'apprendre'",opts:["To forget","To learn","To teach","To repeat"],a:1,level:"a2"},
+    {q:"What does 'en colère' mean?",opts:["In love","Scared","Angry","Sad"],a:2,level:"a2"},
+    {q:"What is 'la croissance'?",opts:["Recession","Inflation","Growth","Tax"],a:2,level:"b2"},
+    {q:"Translate: 'cependant'",opts:["Therefore","However","Furthermore","Because"],a:1,level:"b1"},
+    {q:"What does 'guérir' mean?",opts:["To suffer","To heal","To inject","To operate"],a:1,level:"b1"},
+    {q:"What is 'la dette'?",opts:["Tax","Debt","Dividend","Profit"],a:1,level:"b2"}
+  ],
+  grammar: [
+    {q:"What is the correct article for 'livre' (book)?",opts:["la","le","les","l'"],a:1,level:"a1"},
+    {q:"Choose the correct form: Je ___ étudiant.",opts:["ai","es","suis","est"],a:2,level:"a1"},
+    {q:"What is the feminine of 'beau'?",opts:["beaute","belle","beau","beaux"],a:1,level:"a1"},
+    {q:"After negation, which article replaces 'un/une'?",opts:["le/la","des","de/d'","un/une"],a:2,level:"a1"},
+    {q:"Which pronoun replaces 'elles' as subject?",opts:["ils","elles","nous","vous"],a:1,level:"a1"},
+    {q:"Which past tense describes a completed action?",opts:["Imparfait","Présent","Passé composé","Futur simple"],a:2,level:"a2"},
+    {q:"Which past tense describes a habit or ongoing state?",opts:["Passé composé","Plus-que-parfait","Imparfait","Futur simple"],a:2,level:"a2"},
+    {q:"Which auxiliary does 'aller' use in passé composé?",opts:["avoir","être","aller","faire"],a:1,level:"a2"},
+    {q:"What triggers the subjunctive?",opts:["Certainty","Wishing, emotion, doubt","Past actions","Future events"],a:1,level:"b1"},
+    {q:"In 'Si j'avais le temps, j'irais', what conditional type is this?",opts:["Type 1","Type 2","Type 3","Not conditional"],a:1,level:"b1"},
+    {q:"What does 'ne...plus' mean?",opts:["Never","No longer","Nothing","Nobody"],a:1,level:"a1"},
+    {q:"'DR MRS VANDERTRAMP' verbs use which auxiliary?",opts:["avoir","être","aller","faire"],a:1,level:"a2"},
+    {q:"Which relative pronoun replaces a direct object?",opts:["qui","où","que","dont"],a:2,level:"b1"},
+    {q:"The passé simple is primarily used in:",opts:["Spoken French","Text messages","Literary/written texts","Formal emails"],a:2,level:"b2"},
+    {q:"'Bien que' requires which mood?",opts:["Indicatif","Conditionnel","Subjonctif","Infinitif"],a:2,level:"b2"},
+    {q:"Which pronoun means 'of which / whose'?",opts:["qui","que","où","dont"],a:3,level:"b1"}
+  ],
+  conjugation: [
+    {q:"Conjugate 'être' for 'nous':",opts:["êtes","sommes","suis","sont"],a:1,level:"a1"},
+    {q:"Conjugate 'avoir' for 'il':",opts:["ai","as","a","ont"],a:2,level:"a1"},
+    {q:"Conjugate 'parler' for 'tu' (présent):",opts:["parles","parle","parlons","parlez"],a:0,level:"a1"},
+    {q:"Conjugate 'finir' for 'ils' (présent):",opts:["finit","finissent","finissons","finissez"],a:1,level:"a1"},
+    {q:"Passé composé of 'manger' for 'je':",opts:["j'ai mangé","je mange","j'avais mangé","j'aurais mangé"],a:0,level:"a2"},
+    {q:"Imparfait of 'être' for 'tu':",opts:["es","était","étais","sois"],a:2,level:"a2"},
+    {q:"Futur simple of 'aller' for 'je':",opts:["vais","allais","irai","irais"],a:2,level:"b1"},
+    {q:"Conditionnel of 'pouvoir' for 'il':",opts:["peut","pouvait","pourrait","pourra"],a:2,level:"b1"},
+    {q:"Subjonctif of 'être' for 'ils':",opts:["sont","soient","étaient","seront"],a:1,level:"b1"},
+    {q:"Plus-que-parfait of 'partir' for 'elle':",opts:["était partie","est partie","avait parti","serait partie"],a:0,level:"b2"},
+    {q:"Conditionnel passé of 'avoir' for 'nous':",opts:["aurions eu","avions eu","aurons eu","ayons eu"],a:0,level:"b2"},
+    {q:"Futur simple of 'faire' for 'je':",opts:["ferai","fais","ferais","ferait"],a:0,level:"b1"},
+    {q:"Passé composé of 'venir' for 'tu' (with agreement):",opts:["tu as venu","tu es venu(e)","tu avais venu","tu viens"],a:1,level:"a2"},
+    {q:"Imparfait of 'prendre' for 'nous':",opts:["prenons","prenions","prendrons","prendrions"],a:1,level:"a2"},
+    {q:"Subjonctif of 'avoir' for 'je':",opts:["ai","aie","avais","aurais"],a:1,level:"b1"}
+  ],
+  translation: [
+    {q:"Translate: 'I am going to eat'",opts:["Je mange","Je vais manger","J'ai mangé","Je mangerai"],a:1,level:"a1"},
+    {q:"Translate: 'She has a dog'",opts:["Elle est un chien","Elle a un chien","Elle fait un chien","Elle prend un chien"],a:1,level:"a1"},
+    {q:"Translate: 'We don't speak English'",opts:["Nous parlons anglais","Nous ne parlons pas anglais","Nous parlons pas anglais","Nous ne parlons jamais"],a:1,level:"a1"},
+    {q:"Translate: 'I was eating when he arrived'",opts:["Je mangeais quand il est arrivé","J'ai mangé quand il arrivait","Je mange quand il arrive","J'avais mangé quand il arrivait"],a:0,level:"a2"},
+    {q:"Translate: 'If I had time, I would travel'",opts:["Si j'ai le temps, je voyagerai","Si j'avais le temps, je voyagerais","Si j'avais le temps, j'aurais voyagé","Si j'ai le temps, je voyagerais"],a:1,level:"b1"},
+    {q:"Translate: 'I want you to come'",opts:["Je veux que tu viens","Je veux que tu viennes","Je voulais que tu viens","Je veux tu venir"],a:1,level:"b1"},
+    {q:"Translate: 'She had already left when I arrived'",opts:["Elle était déjà partie quand je suis arrivé","Elle avait déjà parti quand j'arrivais","Elle était partie quand je suis arrivé","Elle avait déjà été partie"],a:0,level:"b2"},
+    {q:"Translate: 'Although he is tired, he works'",opts:["Parce qu'il est fatigué, il travaille","Bien qu'il soit fatigué, il travaille","Bien qu'il est fatigué, il travaille","Quand il est fatigué, il travaille"],a:1,level:"b2"},
+    {q:"Translate: 'What is your name?' (formal)",opts:["Tu t'appelles comment ?","Comment tu t'appelles ?","Comment vous appelez-vous ?","Vous t'appellez comment ?"],a:2,level:"a1"},
+    {q:"Translate: 'I have been living in Paris for 3 years'",opts:["J'ai habité à Paris pour 3 ans","J'habite à Paris depuis 3 ans","Je vivais à Paris depuis 3 ans","J'ai vécu à Paris il y a 3 ans"],a:1,level:"b1"}
+  ]
+};
+
+function selectQuizType(btn) {
+  document.querySelectorAll('.quiz-type-btn[data-type]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  quizType = btn.getAttribute('data-type');
+}
+function selectQuizLevel(btn) {
+  document.querySelectorAll('.quiz-type-btn[data-level]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  quizLevel = btn.getAttribute('data-level');
+}
+
+function buildQuizQuestions() {
+  let pool = [];
+  if (quizType === 'mixed') {
+    pool = [...QUIZ_BANK.vocab, ...QUIZ_BANK.grammar, ...QUIZ_BANK.conjugation, ...QUIZ_BANK.translation];
+  } else {
+    pool = [...(QUIZ_BANK[quizType] || QUIZ_BANK.vocab)];
+  }
+  if (quizLevel !== 'all') {
+    const filtered = pool.filter(q => q.level === quizLevel);
+    pool = filtered.length >= 5 ? filtered : pool;
+  }
+  // shuffle
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, 10);
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizQuestions();
+  quizIndex = 0; quizScore = 0;
+  document.getElementById('quiz-setup').style.display = 'none';
+  document.getElementById('quiz-active').style.display = 'block';
+  document.getElementById('quiz-results').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (quizIndex >= quizQuestions.length) { endQuiz(); return; }
+  const q = quizQuestions[quizIndex];
+  const progress = ((quizIndex + 1) / quizQuestions.length) * 100;
+  document.getElementById('quiz-progress-bar').style.width = progress + '%';
+  document.getElementById('quiz-counter').textContent = `Question ${quizIndex+1} / ${quizQuestions.length}`;
+  document.getElementById('quiz-score-live').textContent = `Score: ${quizScore}`;
+  document.getElementById('quiz-question').textContent = q.q;
+  document.getElementById('quiz-context').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-feedback').innerHTML = '';
+  document.getElementById('quiz-next').className = 'quiz-next';
+  
+  const optsEl = document.getElementById('quiz-options');
+  optsEl.innerHTML = q.opts.map((opt, i) => 
+    `<button class="quiz-option" onclick="answerQuiz(${i}, ${q.a}, this)">${opt}</button>`
+  ).join('');
+}
+
+function answerQuiz(chosen, correct, btn) {
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach(o => o.disabled = true);
+  
+  const fb = document.getElementById('quiz-feedback');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    opts[correct].classList.add('correct');
+    quizScore++;
+    fb.className = 'quiz-feedback correct-fb show';
+    fb.textContent = '✓ Correct!';
+  } else {
+    btn.classList.add('wrong');
+    opts[correct].classList.add('correct');
+    fb.className = 'quiz-feedback wrong-fb show';
+    fb.textContent = `✗ Incorrect. The correct answer is: "${quizQuestions[quizIndex].opts[correct]}"`;
+  }
+  document.getElementById('quiz-score-live').textContent = `Score: ${quizScore}`;
+  document.getElementById('quiz-next').className = 'quiz-next show';
+}
+
+function nextQuestion() {
+  quizIndex++;
+  renderQuestion();
+}
+
+function endQuiz() {
+  document.getElementById('quiz-active').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'block';
+  const total = quizQuestions.length;
+  const pct = Math.round((quizScore / total) * 100);
+  document.getElementById('final-score').textContent = `${quizScore}/${total}`;
+  const labels = ["Keep practicing! 💪", "Good effort! 📖", "Well done! ⭐", "Excellent! 🏆", "Perfect! 🥇"];
+  const li = Math.min(Math.floor(pct / 25), 4);
+  document.getElementById('final-label').textContent = labels[li] + ` (${pct}%)`;
+  document.getElementById('score-breakdown').innerHTML = `<div style="margin-top:16px;padding:16px;background:var(--card);border-radius:8px;border:1px solid var(--border)"><p style="color:var(--muted);font-size:14px">Correct: ${quizScore} | Wrong: ${total - quizScore} | Total: ${total}</p></div>`;
+}
+
+function resetQuiz() {
+  document.getElementById('quiz-setup').style.display = 'block';
+  document.getElementById('quiz-active').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'none';
+}
+
+// ===================== FILL IN BLANKS =====================
+const FILL_EXERCISES = [
+  {text:"Je ___ (être) étudiant à Paris.", answer:"suis", hint:"être, je"},
+  {text:"Elle ___ (avoir) vingt ans.", answer:"a", hint:"avoir, elle"},
+  {text:"Nous ___ (parler) français tous les jours.", answer:"parlons", hint:"parler, nous"},
+  {text:"Ils ___ (finir) leurs devoirs à midi.", answer:"finissent", hint:"finir, ils"},
+  {text:"Tu ___ (manger) une pomme ? C'est bon !", answer:"manges", hint:"manger, tu"},
+  {text:"Hier, j'___ (aller) au cinéma avec mes amis.", answer:"suis allé", hint:"aller, passé composé, être"},
+  {text:"Quand j'étais enfant, je ___ (jouer) au foot.", answer:"jouais", hint:"jouer, imparfait"},
+  {text:"Demain, il ___ (faire) beau.", answer:"fera", hint:"faire, futur simple"},
+  {text:"Elle a dit qu'elle ___ (vouloir) un café.", answer:"voulait", hint:"vouloir, imparfait (indirect speech)"},
+  {text:"Si j'___ (avoir) le temps, je voyagerais.", answer:"avais", hint:"avoir, imparfait (type 2 conditional)"},
+  {text:"Il faut que tu ___ (être) à l'heure !", answer:"sois", hint:"être, subjonctif"},
+  {text:"Avant qu'il ___ (partir), il a mangé.", answer:"parte", hint:"partir, subjonctif"},
+  {text:"Elle ___ (déjà / manger) quand je suis arrivé.", answer:"avait déjà mangé", hint:"manger, plus-que-parfait"},
+  {text:"Nous ___ (pouvoir) venir si tu veux.", answer:"pouvons", hint:"pouvoir, présent"},
+  {text:"Ils ___ (vendre) leur maison l'année dernière.", answer:"ont vendu", hint:"vendre, passé composé"},
+  {text:"Je ___ (ne pas / savoir) la réponse.", answer:"ne sais pas", hint:"savoir, négation"},
+  {text:"Vous ___ (venir) à la fête ce soir ?", answer:"venez", hint:"venir, présent"},
+  {text:"Elle ___ (se lever) toujours à sept heures.", answer:"se lève", hint:"se lever, présent"},
+  {text:"S'il avait travaillé, il ___ (réussir).", answer:"aurait réussi", hint:"réussir, conditionnel passé"},
+  {text:"Je doute qu'il ___ (pouvoir) finir à temps.", answer:"puisse", hint:"pouvoir, subjonctif"}
+];
+
+let fillShown = [];
+
+function genFill() {
+  const shuffled = [...FILL_EXERCISES].sort(() => Math.random()-0.5).slice(0,8);
+  fillShown = shuffled;
+  const c = document.getElementById('fill-exercises');
+  document.getElementById('fill-score').textContent = '';
+  c.innerHTML = shuffled.map((ex, i) => {
+    const parts = ex.text.split('___');
+    return `<div class="card fill-blank" style="margin-bottom:16px">
+      <p style="font-size:15px;color:var(--text);margin-bottom:8px">${i+1}. ${parts[0]}<input id="fill-${i}" type="text" placeholder="...">${parts[1] || ''}</p>
+      <p style="font-size:12px;color:var(--muted)">Hint: <em>${ex.hint}</em></p>
+    </div>`;
+  }).join('');
+}
+
+function checkFill() {
+  let correct = 0;
+  fillShown.forEach((ex, i) => {
+    const input = document.getElementById('fill-' + i);
+    if (!input) return;
+    const val = input.value.trim().toLowerCase();
+    const ans = ex.answer.toLowerCase();
+    if (val === ans) { input.classList.add('correct-ans'); input.classList.remove('wrong-ans'); correct++; }
+    else { input.classList.add('wrong-ans'); input.classList.remove('correct-ans'); input.placeholder = ex.answer; }
+  });
+  document.getElementById('fill-score').textContent = `Score: ${correct} / ${fillShown.length} — ${Math.round(correct/fillShown.length*100)}%`;
+}
+
+function resetFill() {
+  fillShown.forEach((_, i) => {
+    const input = document.getElementById('fill-' + i);
+    if (input) { input.value = ''; input.className = ''; }
+  });
+  document.getElementById('fill-score').textContent = '';
+}
+
+// Init
+setLang('en');
+// Default show être on verbs page load
+document.getElementById('verbInput') && (document.getElementById('verbInput').value = 'être');
+</script>
+</body>
+</html>
